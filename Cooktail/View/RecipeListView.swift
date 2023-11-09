@@ -10,12 +10,14 @@ import SwiftUI
 
 struct RecipeListView: View {
     
-    var items = ["Eins", "Zwei", "Drei"]
+    var items = ["Eins", "Zwei", "Drei", "Eins", "Zwei", "Drei", "Eins", "Zwei", "Drei", "Eins", "Zwei", "Drei", "Eins", "Zwei", "Drei"]
     @State private var sheetIsPresented: Bool = false
     
     var body: some View {
+        
         NavigationStack {
             List(items, id: \.self) { item in
+                
                 NavigationLink(destination: RecipeDetailView(title: item)) {
                     Text(item)
                 }
@@ -23,6 +25,7 @@ struct RecipeListView: View {
             .navigationTitle("Cooktail")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
+                
                 Button(action: {
                     sheetIsPresented = true
                 }, label: {

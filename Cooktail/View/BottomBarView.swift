@@ -11,6 +11,7 @@ import SwiftUI
 struct BottomBarView: View {
     
     var body: some View {
+        
         TabView {
             RecipeListView()
                 .tabItem {

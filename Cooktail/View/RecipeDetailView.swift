@@ -6,3 +6,17 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct RecipeDetailView: View {
+    
+    var title: String
+    
+    var body: some View {
+        
+        HStack{
+            
+            Text("Recipe details \(title)")
+        }
+    }
+}

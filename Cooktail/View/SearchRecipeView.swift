@@ -6,3 +6,28 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct SearchRecipeView: View {
+    
+    var title: String
+    @Binding var sheetIsPresented: Bool
+    
+    var body: some View {
+        
+        NavigationStack{
+            
+            Text(title)
+                .toolbar(content: {
+                    Button(action: {
+                        
+                        print("Yes")
+                        sheetIsPresented = false
+                    }, label: {
+                        
+                        Text("Save")
+                    })
+                })
+        }
+    }
+}
