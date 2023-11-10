@@ -31,3 +31,7 @@ struct SearchRecipeView: View {
         }
     }
 }
+
+#Preview {
+    SearchRecipeView(title: "Placeholder", sheetIsPresented: .constant(true))
+}
