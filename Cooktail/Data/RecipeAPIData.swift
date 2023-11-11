@@ -14,7 +14,7 @@ class RecipeAPIData {
     private let appKey = "DkbN89O87aS3xbKZTdkWkFjF0jxS8AS6"
     
     //Ergebnis -> Alle Rezepte die das keyword enthalten
-    func fetchAllRecipes(from keyword: String, completion: @escaping (AllRecipesDataModel?) -> Void) {
+    func fetchAllRecipes(from keyword: String, completion: @escaping (SearchedRecipesDataModel?) -> Void) {
         
         let urlAsString = "\(baseURL)complexSearch?query=\(keyword)&apikey=\(appKey)"
         print(urlAsString)
@@ -46,7 +46,7 @@ class RecipeAPIData {
         task.resume()
     }
     
-    private func performRequestForAllRecipes(from urlString: String, completion: @escaping (AllRecipesDataModel?) -> Void) {
+    private func performRequestForAllRecipes(from urlString: String, completion: @escaping (SearchedRecipesDataModel?) -> Void) {
         
         guard let url = URL(string: urlString) else {return}
             let session = URLSession(configuration: .default)
@@ -74,11 +74,11 @@ class RecipeAPIData {
         }
     }
     
-    private func parseJSONForAllRecipes(from data: Data, completion: @escaping (AllRecipesDataModel?) -> Void) {
+    private func parseJSONForAllRecipes(from data: Data, completion: @escaping (SearchedRecipesDataModel?) -> Void) {
         
         let decoder = JSONDecoder()
         do {
-            let decoderData = try decoder.decode(AllRecipesDataModel.self, from: data)
+            let decoderData = try decoder.decode(SearchedRecipesDataModel.self, from: data)
             completion(decoderData)
         }catch {
             print(error)

@@ -11,8 +11,12 @@ import SwiftUI
 struct SearchRecipesView: View {
     
     @Binding var sheetIsPresented: Bool
-    @Binding var searchText: String
-    @State private var recipeData: AllRecipesDataModel? = nil
+    @Binding var tappedRecipeId: Int?
+    
+    @State var searchText: String = ""
+    @State private var searchedRecipeData: SearchedRecipesDataModel? = nil
+    
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         
@@ -21,36 +25,45 @@ struct SearchRecipesView: View {
             HStack{
                 
                 Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.black)
                 
                 TextField("Rezept suchen", text: $searchText)
                     .onSubmit {
-                        fetchRecipe()
+                        fetchSearchedRecipe()
                     }
+                    .foregroundStyle(.black)
                 
                 Button(action: {
-
+                    
                 }, label: {
                     
                     Image(systemName: "x.circle")
                         .onTapGesture {
                             searchText = ""
                         }
+                        .foregroundStyle(.black)
                         .padding(.trailing)
                 })
             }
+            .padding(7)
+            .background(
+                RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                    .fill(Color(red: 211/255, green: 211/255, blue: 211/255))
+            )
             .padding()
             
             VStack{
-                if let recipes = recipeData {
+                if let recipes = searchedRecipeData {
                     List(recipes.results, id: \.id) { recipe in
-                        Text(recipe.title)
-                            .foregroundStyle(.black)
+                        SearchedRecipeCellView(title: recipe.title, image: recipe.image)
+                            .onTapGesture {
+                                tappedRecipeId = recipe.id
+                                print("ID:  \(recipe.id)")
+                            }
                     }
                     .listStyle(PlainListStyle())
                 } else {
                     Text("Keine Daten gefunden")
-                        .foregroundStyle(.black)
                 }
             }
             Spacer()
@@ -66,18 +79,14 @@ struct SearchRecipesView: View {
         }
     }
     
-    private func fetchRecipe() {
+    private func fetchSearchedRecipe() {
         
         let recipes = RecipeAPIData()
         recipes.fetchAllRecipes(from: searchText) { recipeData in
             DispatchQueue.main.async {
-                self.recipeData = recipeData
+                self.searchedRecipeData = recipeData
             }
             
         }
     }
 }
-
-//#Preview {
-//    SearchRecipesView(sheetIsPresented: .constant(true))
-//}

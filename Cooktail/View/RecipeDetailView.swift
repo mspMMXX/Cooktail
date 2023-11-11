@@ -10,13 +10,13 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     
-    var title: String
+    var recipeData: RecipeDataModel
     
     var body: some View {
         
         HStack{
             
-            Text("Recipe details \(title)")
+            Text("Recipe details \(recipeData.instructions)")
         }
     }
 }

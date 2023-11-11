@@ -11,16 +11,21 @@ struct RecipeListView: View {
     
     var items = ["Eins", "Zwei", "Drei"]
     @State private var sheetIsPresented: Bool = false
-    @State var searchText: String = ""
+    @State private var recipeData: [RecipeDataModel] = []
+    @State private var tappedRecipeId: Int?
     
     var body: some View {
         
         NavigationStack {
-            List(items, id: \.self) { item in
+            
+            VStack{
                 
-                NavigationLink(destination: RecipeDetailView(title: item)) {
-                    Text(item)
+                List(recipeData, id: \.id) { recipe in
+                    NavigationLink(destination: RecipeDetailView(recipeData: recipe)) {
+                        RecipeListCell(title: recipe.title, servings: recipe.servings, readyInMinutes: recipe.readyInMinutes, image: recipe.image)
+                    }
                 }
+                
             }
             .navigationTitle("Cooktail")
             .navigationBarTitleDisplayMode(.inline)
@@ -35,7 +40,18 @@ struct RecipeListView: View {
                 })
             })
             .sheet(isPresented: $sheetIsPresented, content: {
-                SearchRecipesView(sheetIsPresented: $sheetIsPresented, searchText: $searchText)
+                SearchRecipesView(sheetIsPresented: $sheetIsPresented, tappedRecipeId: $tappedRecipeId)
+                    .onChange(of: tappedRecipeId, initial: true) {
+                        if let id = tappedRecipeId {
+                            print("OnChange unter List wird ausgefuehrt")
+                            let recipeAPI = RecipeAPIData()
+                            recipeAPI.fetchRecipe(with: String(id)) { recipe in
+                                if let _recipe = recipe {
+                                    recipeData.append(_recipe)
+                                }
+                            }
+                        }
+                    }
             })
         }
     }

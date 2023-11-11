@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AllRecipes {
+struct SearchedRecipes {
     
     var id: Int
     var title: String

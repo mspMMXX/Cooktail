@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AllRecipesDataModel: Codable{
+struct SearchedRecipesDataModel: Codable{
     
     var results: [Results]
 }
