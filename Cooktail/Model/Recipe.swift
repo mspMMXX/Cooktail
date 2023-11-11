@@ -6,16 +6,14 @@
 //
 
 import Foundation
-import SwiftUI
 
 struct Recipe {
     
     var title: String
     var persons: Int
-    var calories: Int
     var instruction: String
     var cookingDuration: Int
-    var ingredients: [Ingredients] = []
+    var ingredients: [Ingredients]
     var image: String
     
 }

@@ -11,6 +11,7 @@ struct RecipeListView: View {
     
     var items = ["Eins", "Zwei", "Drei"]
     @State private var sheetIsPresented: Bool = false
+    @State var searchText: String = ""
     
     var body: some View {
         
@@ -28,24 +29,13 @@ struct RecipeListView: View {
                 Button(action: {
                     
                     sheetIsPresented = true
-                    
-                    //NUR TESTCODE UNTEN
-                    let recipes = RecipeAPIData()
-                    recipes.fetchRecipe(with: "637631") { recipe in
-                        if let _recipe = recipe {
-                            print("\(_recipe.title) \(_recipe.instructions)")
-                            for ingrediant in _recipe.extendedIngredients {
-                                print("\(ingrediant.nameClean) - \(ingrediant.amount) \(ingrediant.unit)")
-                            }
-                        }
-                    }
-                    //NUR TESTCODE OBEN
+                    print("Sheet")
                 }, label: {
                     Image(systemName: "plus")
                 })
             })
             .sheet(isPresented: $sheetIsPresented, content: {
-                SearchRecipeView(title: "Rezept Suche", sheetIsPresented: $sheetIsPresented)
+                SearchRecipesView(sheetIsPresented: $sheetIsPresented, searchText: $searchText)
             })
         }
     }
