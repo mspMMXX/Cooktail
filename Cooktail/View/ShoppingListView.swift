@@ -11,21 +11,18 @@ import SwiftUI
 struct ShoppingListView: View {
     
     var items = ["Artiekl 1", "Artikel 2", "Artikel 3", "Artikel 4"]
+    @EnvironmentObject private var shoppingListController: ShoppingListController
     
     var body: some View {
         
         NavigationStack{
             //Searchbar
            
-            List(items, id: \.self) { item in
-                Text(item)
+            List(shoppingListController.shoppingList, id: \.id) { ingredient in
+                Text(ingredient.nameClean)
             }
                 .navigationTitle("Shopping list")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
-}
-
-#Preview {
-    ShoppingListView()
 }

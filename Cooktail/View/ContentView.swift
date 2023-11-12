@@ -12,7 +12,8 @@ struct RecipeListView: View {
     var items = ["Eins", "Zwei", "Drei"]
     @State private var sheetIsPresented: Bool = false
     @State private var recipeData: [RecipeDataModel] = []
-    @State private var tappedRecipeId: Int?
+    @State private var recipeId: Int?
+    @EnvironmentObject private var shoppingListController: ShoppingListController
     
     var body: some View {
         
@@ -40,14 +41,21 @@ struct RecipeListView: View {
                 })
             })
             .sheet(isPresented: $sheetIsPresented, content: {
-                SearchRecipesView(sheetIsPresented: $sheetIsPresented, tappedRecipeId: $tappedRecipeId)
-                    .onChange(of: tappedRecipeId, initial: true) {
-                        if let id = tappedRecipeId {
+                SearchRecipesView(sheetIsPresented: $sheetIsPresented, recipeId: $recipeId)
+                    .onChange(of: recipeId, initial: true) {
+                        
+                        if let id = recipeId {
+                            
                             print("OnChange unter List wird ausgefuehrt")
+                            
                             let recipeAPI = RecipeAPIData()
                             recipeAPI.fetchRecipe(with: String(id)) { recipe in
                                 if let _recipe = recipe {
                                     recipeData.append(_recipe)
+                                    for ingredient in _recipe.extendedIngredients {
+                                        shoppingListController.shoppingList.append(ingredient)
+                                    }
+                                    recipeId = nil
                                 }
                             }
                         }
@@ -59,14 +67,18 @@ struct RecipeListView: View {
 
 struct ContentView: View {
     
+    @StateObject private var shoppingListController = ShoppingListController()
+    
     var body: some View {
         
         TabView {
             RecipeListView()
+                .environment(shoppingListController)
                 .tabItem {
                     Label("Recipe", systemImage: "list.bullet")
                 }
             ShoppingListView()
+                .environment(shoppingListController)
                 .tabItem {
                     Label("Shopping", systemImage: "cart")
                 }
