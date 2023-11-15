@@ -25,6 +25,7 @@ struct RecipeListCell: View {
             }
             VStack{
                 Text(title)
+                    .multilineTextAlignment(.center)
                     .font(.title3)
                 Text("Zubereitungszeit: \(String(readyInMinutes)) min.")
                     .font(.footnote)

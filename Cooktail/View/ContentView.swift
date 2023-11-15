@@ -26,7 +26,6 @@ struct RecipeListView: View {
                         RecipeListCell(title: recipe.title, servings: recipe.servings, readyInMinutes: recipe.readyInMinutes, image: recipe.image)
                     }
                 }
-                
             }
             .navigationTitle("Cooktail")
             .navigationBarTitleDisplayMode(.inline)
@@ -51,11 +50,13 @@ struct RecipeListView: View {
                             let recipeAPI = RecipeAPIData()
                             recipeAPI.fetchRecipe(with: String(id)) { recipe in
                                 if let _recipe = recipe {
-                                    recipeData.append(_recipe)
-                                    for ingredient in _recipe.extendedIngredients {
-                                        shoppingListController.shoppingList.append(ingredient)
+                                    DispatchQueue.main.async {
+                                        recipeData.append(_recipe)
+                                        for ingredient in _recipe.extendedIngredients {
+                                            shoppingListController.shoppingList.append(ingredient)
+                                        }
+                                        recipeId = nil
                                     }
-                                    recipeId = nil
                                 }
                             }
                         }

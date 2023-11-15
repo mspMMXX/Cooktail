@@ -12,6 +12,7 @@ struct SearchRecipesView: View {
     
     @Binding var sheetIsPresented: Bool
     @Binding var recipeId: Int?
+    @State private var tappedRecipeId: Int?
     @State private var alertIsPresented: Bool = false
     @State var searchText: String = ""
     @State private var searchedRecipeData: SearchedRecipesDataModel? = nil
@@ -57,13 +58,16 @@ struct SearchRecipesView: View {
                     List(recipes.results, id: \.id) { recipe in
                         SearchedRecipeCellView(title: recipe.title, image: recipe.image)
                             .onTapGesture {
+                                tappedRecipeId = recipe.id
                                 alertIsPresented = true
                             }
                             .alert("Möchten Sie das Rezept zu Ihrer Liste hinzufügen?", isPresented: $alertIsPresented) {
                                 Button("Hinzufügen") {
                                     
-                                        recipeId = recipe.id
-                                        print("ID:  \(recipe.id)")
+                                    if let _tappedRecipeId = tappedRecipeId {
+                                        recipeId = _tappedRecipeId
+                                    }
+                                    print("ID:  \(recipe.id)")
                                     
                                     DispatchQueue.main.async {
                                         alertIsPresented = false
@@ -87,7 +91,8 @@ struct SearchRecipesView: View {
                         sheetIsPresented = false
                     }, label: {
                         
-                        Text("Abbrechen")
+                        Image(systemName: "x.circle.fill")
+                            .foregroundStyle(.gray)
                     })
                 })
         }

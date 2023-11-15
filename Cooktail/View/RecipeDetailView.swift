@@ -15,8 +15,9 @@ struct RecipeDetailView: View {
     var body: some View {
         
         HStack{
-            
-            Text("Recipe details \(recipeData.instructions)")
+            List(recipeData.analyzedInstructions.first?.steps ?? [], id: \.number) { recipe in
+                Text("\(recipe.number). \(recipe.step)")
+            }
         }
     }
 }
