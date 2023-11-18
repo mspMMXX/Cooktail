@@ -11,6 +11,7 @@ import SwiftUI
 struct ShoppingListView: View {
     
     @EnvironmentObject private var shoppingListController: ShoppingListController
+    @State private var isOn: Bool = false
     
     var body: some View {
         
@@ -18,7 +19,12 @@ struct ShoppingListView: View {
             //Searchbar
             
             List(shoppingListController.shoppingList, id: \.id) { ingredient in
-                Text(ingredient.name)
+                HStack{
+                    Text(ingredient.name)
+                    Spacer()
+                    Text("\(ingredient.amount ?? "") \(ingredient.unit ?? "")")
+                }
+                    
             }
             .navigationTitle("Shopping list")
             .navigationBarTitleDisplayMode(.inline)

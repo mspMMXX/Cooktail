@@ -21,7 +21,7 @@ struct RecipeModel: Codable, Identifiable {
 struct RecipeIngredients: Codable, Identifiable {
     
     var id: String {name}
-    let amount: String
+    let amount: String?
     let name: String
-    let unit: String
+    let unit: String?
 }
