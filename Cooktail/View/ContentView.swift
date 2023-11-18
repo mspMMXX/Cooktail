@@ -9,10 +9,10 @@ import SwiftUI
 
 struct RecipeListView: View {
     
-    var items = ["Eins", "Zwei", "Drei"]
+    private let recipeRapidData = RecipeRapidData()
     @State private var sheetIsPresented: Bool = false
-    @State private var recipeData: [RecipeDataModel] = []
-    @State private var recipeId: Int?
+    @State private var recipesList: [RecipeModel] = []
+    @State private var recipeURL: String?
     @EnvironmentObject private var shoppingListController: ShoppingListController
     
     var body: some View {
@@ -21,9 +21,9 @@ struct RecipeListView: View {
             
             VStack{
                 
-                List(recipeData, id: \.id) { recipe in
+                List(recipesList, id: \.id) { recipe in
                     NavigationLink(destination: RecipeDetailView(recipeData: recipe)) {
-                        RecipeListCell(title: recipe.title, servings: recipe.servings, readyInMinutes: recipe.readyInMinutes, image: recipe.image)
+                        RecipeListCell(title: recipe.title, portions: recipe.portions, readyInMinutes: recipe.totalTime, image: recipe.image_urls[0])
                     }
                 }
             }
@@ -34,35 +34,32 @@ struct RecipeListView: View {
                 Button(action: {
                     
                     sheetIsPresented = true
-                    print("Sheet")
                 }, label: {
                     Image(systemName: "plus")
                 })
             })
             .sheet(isPresented: $sheetIsPresented, content: {
-                SearchRecipesView(sheetIsPresented: $sheetIsPresented, recipeId: $recipeId)
-                    .onChange(of: recipeId, initial: true) {
-                        
-                        if let id = recipeId {
-                            
-                            print("OnChange unter List wird ausgefuehrt")
-                            
-                            let recipeAPI = RecipeAPIData()
-                            recipeAPI.fetchRecipe(with: String(id)) { recipe in
-                                if let _recipe = recipe {
-                                    DispatchQueue.main.async {
-                                        recipeData.append(_recipe)
-                                        for ingredient in _recipe.extendedIngredients {
-                                            shoppingListController.shoppingList.append(ingredient)
-                                        }
-                                        recipeId = nil
-                                    }
-                                }
-                            }
-                        }
-                    }
+                SearchRecipesView(sheetIsPresented: $sheetIsPresented, recipeURL: $recipeURL)
             })
         }
+        .onChange(of: recipeURL) {
+            
+            if let url = recipeURL {
+                
+                DispatchQueue.main.async {
+                    recipeRapidData.fetchRecipe(with: url) { recipe in
+                        if let _recipe = recipe {
+                            self.recipesList.append(_recipe)
+                            for ingredient in _recipe.ingredients {
+                                shoppingListController.shoppingList.append(ingredient)
+                            }
+                            recipeURL = nil
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 }
 
@@ -74,14 +71,14 @@ struct ContentView: View {
         
         TabView {
             RecipeListView()
-                .environment(shoppingListController)
+                .environmentObject(shoppingListController)
                 .tabItem {
-                    Label("Recipe", systemImage: "list.bullet")
+                    Label("Rezepte", systemImage: "list.bullet")
                 }
             ShoppingListView()
-                .environment(shoppingListController)
+                .environmentObject(shoppingListController)
                 .tabItem {
-                    Label("Shopping", systemImage: "cart")
+                    Label("Einkaufen", systemImage: "cart")
                 }
         }
         .background(.blue)

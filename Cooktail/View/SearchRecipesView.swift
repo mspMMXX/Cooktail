@@ -11,11 +11,11 @@ import SwiftUI
 struct SearchRecipesView: View {
     
     @Binding var sheetIsPresented: Bool
-    @Binding var recipeId: Int?
-    @State private var tappedRecipeId: Int?
+    @Binding var recipeURL: String?
+    @State private var tappedRecipeURL: String?
     @State private var alertIsPresented: Bool = false
     @State var searchText: String = ""
-    @State private var searchedRecipeData: SearchedRecipesDataModel? = nil
+    @State private var searchedRecipeData: [Items] = []
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -30,7 +30,9 @@ struct SearchRecipesView: View {
                 
                 TextField("Rezept suchen", text: $searchText)
                     .onSubmit {
-                        fetchSearchedRecipe()
+                        DispatchQueue.main.async {
+                            fetchSearchedRecipe()
+                        }
                     }
                     .foregroundStyle(.black)
                 
@@ -54,40 +56,37 @@ struct SearchRecipesView: View {
             .padding()
             
             VStack{
-                if let recipes = searchedRecipeData {
-                    List(recipes.results, id: \.id) { recipe in
-                        SearchedRecipeCellView(title: recipe.title, image: recipe.image)
-                            .onTapGesture {
-                                tappedRecipeId = recipe.id
-                                alertIsPresented = true
-                            }
-                            .alert("Möchten Sie das Rezept zu Ihrer Liste hinzufügen?", isPresented: $alertIsPresented) {
-                                Button("Hinzufügen") {
-                                    
-                                    if let _tappedRecipeId = tappedRecipeId {
-                                        recipeId = _tappedRecipeId
-                                    }
-                                    print("ID:  \(recipe.id)")
-                                    
+                List(searchedRecipeData, id: \.id) { recipe in
+                    SearchedRecipeCellView(title: recipe.title, image: recipe.image_urls[0])
+                        .onTapGesture {
+                            tappedRecipeURL = recipe.source
+                            alertIsPresented = true
+                        }
+                        .alert("Möchten Sie das Rezept zu Ihrer Liste hinzufügen?", isPresented: $alertIsPresented) {
+                            Button("Hinzufügen") {
+                                
+                                if let _tappedRecipeURL = tappedRecipeURL {
                                     DispatchQueue.main.async {
+                                        recipeURL = _tappedRecipeURL
                                         alertIsPresented = false
                                         sheetIsPresented = false
                                     }
                                 }
-                                Button("Abbrechen") {
+                            }
+                            Button("Abbrechen") {
+                                
+                                DispatchQueue.main.async {
                                     alertIsPresented = false
                                 }
                             }
-                    }
-                    .listStyle(PlainListStyle())
-                } else {
-                    Text("Keine Daten gefunden")
+                        }
                 }
+                .listStyle(PlainListStyle())
             }
             Spacer()
                 .toolbar(content: {
                     Button(action: {
-                        print("Yes")
+                        
                         sheetIsPresented = false
                     }, label: {
                         
@@ -100,12 +99,13 @@ struct SearchRecipesView: View {
     
     private func fetchSearchedRecipe() {
         
-        let recipes = RecipeAPIData()
-        recipes.fetchAllRecipes(from: searchText) { recipeData in
+        let recipes = RecipeRapidData()
+        recipes.fetchSearchedRecipes(with: searchText) { recipeData in
             DispatchQueue.main.async {
-                self.searchedRecipeData = recipeData
+                if let items = recipeData {
+                    searchedRecipeData = items
+                }
             }
-            
         }
     }
 }

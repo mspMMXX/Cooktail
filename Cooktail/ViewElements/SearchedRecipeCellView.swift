@@ -15,7 +15,7 @@ struct SearchedRecipeCellView: View {
     var image: String?
     
     var body: some View {
-
+        
         HStack{
             if let _image = image {
                 AsyncImage(url: URL(string: _image), scale: 3.5)

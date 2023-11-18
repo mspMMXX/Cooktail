@@ -11,7 +11,7 @@ import SwiftUI
 struct RecipeListCell: View {
     
     var title: String
-    var servings: Int
+    var portions: Int
     var readyInMinutes: Int
     var image: String?
     
@@ -27,9 +27,9 @@ struct RecipeListCell: View {
                 Text(title)
                     .multilineTextAlignment(.center)
                     .font(.title3)
-                Text("Zubereitungszeit: \(String(readyInMinutes)) min.")
+                Text("Zubereitungszeit: \(String(readyInMinutes/60)) min.")
                     .font(.footnote)
-                Text("Personen: \(String(servings))")
+                Text("Portionen: \(String(portions))")
                     .font(.footnote)
             }
         }
