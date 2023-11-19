@@ -25,7 +25,14 @@ extension Ingredient {
     public var wrappedName: String {
         name ?? "Unbekannt"
     }
-
+    
+    public var wrappedAmount: String {
+        amount ?? ""
+    }
+    
+    public var wrappedUnit: String {
+        unit ?? ""
+    }
 }
 
 extension Ingredient : Identifiable {

@@ -10,12 +10,12 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     
-    var recipeData: RecipeModel
+    var recipeData: MealRecipe
     
     var body: some View {
         
         HStack{
-            List(Array(recipeData.steps.enumerated()), id: \.element) { index, step in
+            List(Array(recipeData.instructionsArray.enumerated()), id: \.element) { index, step in
                 HStack(alignment: .top) {
                     Text("\(index + 1).")
                         .bold()
@@ -26,5 +26,6 @@ struct RecipeDetailView: View {
                 }
             }
         }
+        .navigationTitle("Anleitung")
     }
 }

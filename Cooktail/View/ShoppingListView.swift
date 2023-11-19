@@ -10,21 +10,22 @@ import SwiftUI
 
 struct ShoppingListView: View {
     
-    @EnvironmentObject private var shoppingListController: ShoppingListController
+    @FetchRequest(sortDescriptors: []) var mealRecipes: FetchedResults<MealRecipe>
+    
     @State private var isOn: Bool = false
     
     var body: some View {
         
         NavigationStack{
             //Searchbar
-            VStack {
-                List(shoppingListController.shoppingList, id: \.id) { recipe in
-                    Section(recipe.title) {
-                        ForEach(recipe.ingredients, id: \.id) { ingredient in
+            List {
+                ForEach(mealRecipes, id: \.self) { recipe in
+                    Section(recipe.wrappedTitle) {
+                        ForEach(recipe.ingredientArray, id: \.self) { ingredient in
                             HStack{
-                                Text(ingredient.name)
+                                Text(ingredient.wrappedName)
                                 Spacer()
-                                Text("\(ingredient.amount ?? "") \(ingredient.unit ?? "")")
+                                Text("\(ingredient.wrappedAmount) \(ingredient.wrappedUnit)")
                             }
                         }
                     }

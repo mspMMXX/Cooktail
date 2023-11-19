@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct RecipeModel: Codable, Identifiable {
+public struct RecipeModel: Codable, Identifiable, Hashable {
     
-    var id: String { title }
+    public let id: UUID?
     let image_urls: [String]
     let ingredients: [IngredientModel]
     let steps: [String]
@@ -18,9 +18,9 @@ struct RecipeModel: Codable, Identifiable {
     let portions: Int
 }
 
-struct IngredientModel: Codable, Identifiable {
+public struct IngredientModel: Codable, Identifiable, Hashable {
     
-    var id: String {name}
+    public let id: UUID?
     let amount: String?
     let name: String
     let unit: String?

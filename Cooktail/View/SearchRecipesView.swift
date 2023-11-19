@@ -98,7 +98,9 @@ struct SearchRecipesView: View {
                 .toolbar(content: {
                     Button(action: {
                         
-                        sheetIsPresented = false
+                        DispatchQueue.main.async {
+                            sheetIsPresented = false
+                        }
                     }, label: {
                         
                         Image(systemName: "x.circle.fill")
