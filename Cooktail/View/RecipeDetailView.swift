@@ -20,7 +20,7 @@ struct RecipeDetailView: View {
                     Text("\(index + 1).")
                         .bold()
                         .frame(width: 30, alignment: .leading)
-
+                    
                     Text(step)
                     Spacer()
                 }

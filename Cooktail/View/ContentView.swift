@@ -95,7 +95,7 @@ struct RecipeListView: View {
         newMealRecipe.instructionsArray = recipeModel.steps
         newMealRecipe.portions = Int16(recipeModel.portions)
         newMealRecipe.title = recipeModel.title
-//        newMealRecipe.ingredientArray = recipeModel.ingredients
+        //        newMealRecipe.ingredientArray = recipeModel.ingredients
         print(recipeModel.title)
         
         for ingredientModel in recipeModel.ingredients {
@@ -119,14 +119,14 @@ struct RecipeListView: View {
     
     private func deleteData(from recipe: MealRecipe) {
         moc.delete(recipe)
-
+        
         do {
             try moc.save()
         } catch let error as NSError {
             // Fehlerbehandlung
             print("Fehler beim Löschen: \(error), \(error.userInfo)")
         }
-
+        
     }
 }
 

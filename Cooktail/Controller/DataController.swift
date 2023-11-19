@@ -17,8 +17,6 @@ class DataController: ObservableObject {
         container.loadPersistentStores { NSPersistentStoreDescription, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo))")
-            } else {
-                print(self.container.persistentStoreDescriptions.first?.url)
             }
         }
     }

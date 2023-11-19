@@ -17,7 +17,6 @@ struct ShoppingListView: View {
     var body: some View {
         
         NavigationStack{
-            //Searchbar
             List {
                 ForEach(mealRecipes, id: \.self) { recipe in
                     Section(recipe.wrappedTitle) {
