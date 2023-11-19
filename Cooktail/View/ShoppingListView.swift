@@ -17,17 +17,21 @@ struct ShoppingListView: View {
         
         NavigationStack{
             //Searchbar
-            
-            List(shoppingListController.shoppingList, id: \.id) { ingredient in
-                HStack{
-                    Text(ingredient.name)
-                    Spacer()
-                    Text("\(ingredient.amount ?? "") \(ingredient.unit ?? "")")
+            VStack {
+                List(shoppingListController.shoppingList, id: \.id) { recipe in
+                    Section(recipe.title) {
+                        ForEach(recipe.ingredients, id: \.id) { ingredient in
+                            HStack{
+                                Text(ingredient.name)
+                                Spacer()
+                                Text("\(ingredient.amount ?? "") \(ingredient.unit ?? "")")
+                            }
+                        }
+                    }
                 }
-                    
+                .navigationTitle("Shopping list")
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .navigationTitle("Shopping list")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

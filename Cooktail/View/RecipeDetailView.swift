@@ -15,8 +15,15 @@ struct RecipeDetailView: View {
     var body: some View {
         
         HStack{
-            List(recipeData.steps, id: \.self) { step in
-                Text(step)
+            List(Array(recipeData.steps.enumerated()), id: \.element) { index, step in
+                HStack(alignment: .top) {
+                    Text("\(index + 1).")
+                        .bold()
+                        .frame(width: 30, alignment: .leading)
+
+                    Text(step)
+                    Spacer()
+                }
             }
         }
     }

@@ -8,5 +8,5 @@
 import Foundation
 
 class ShoppingListController: ObservableObject {
-    @Published var shoppingList: [RecipeIngredients] = []
+    @Published var shoppingList: [RecipeModel] = []
 }

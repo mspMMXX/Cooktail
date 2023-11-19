@@ -11,14 +11,14 @@ struct RecipeModel: Codable, Identifiable {
     
     var id: String { title }
     let image_urls: [String]
-    let ingredients: [RecipeIngredients]
+    let ingredients: [IngredientModel]
     let steps: [String]
     let title: String
     let totalTime: Int
     let portions: Int
 }
 
-struct RecipeIngredients: Codable, Identifiable {
+struct IngredientModel: Codable, Identifiable {
     
     var id: String {name}
     let amount: String?
