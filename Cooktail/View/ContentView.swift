@@ -10,7 +10,7 @@ import CoreData
 
 struct RecipeListView: View {
     
-    @Environment(\.managedObjectContext) var moc
+    @EnvironmentObject var dataController: DataController
     @FetchRequest(sortDescriptors: []) var mealRecipes: FetchedResults<MealRecipe>
     
     private let recipeRapidData = RecipeRapidData()
@@ -50,7 +50,7 @@ struct RecipeListView: View {
                 }
                 Button("Ja") {
                     if let _recipeToDelete = recipeToDelete {
-                        deleteData(from: _recipeToDelete)
+                        dataController.delete(_recipeToDelete)
                     }
                     self.deleteAlert = false
                 }
@@ -75,7 +75,7 @@ struct RecipeListView: View {
                         recipe = _recipeModel
                         if let _recipe = recipe {
                             DispatchQueue.main.async {
-                                addToCoreData(with: _recipe)
+                                dataController.saveData(from: _recipe)
                                 print("AddToCoreData = OK")
                             }
                         }
@@ -83,50 +83,6 @@ struct RecipeListView: View {
                 }
             }
         }
-        
-    }
-    
-    private func addToCoreData(with recipeModel: RecipeModel) {
-        
-        let newMealRecipe = MealRecipe(context: moc)
-        newMealRecipe.id = UUID()
-        newMealRecipe.cookingDuration = Int64(recipeModel.totalTime)
-        newMealRecipe.imageURL = recipeModel.image_urls[0]
-        newMealRecipe.instructionsArray = recipeModel.steps
-        newMealRecipe.portions = Int16(recipeModel.portions)
-        newMealRecipe.title = recipeModel.title
-        //        newMealRecipe.ingredientArray = recipeModel.ingredients
-        print(recipeModel.title)
-        
-        for ingredientModel in recipeModel.ingredients {
-            let ingredient = Ingredient(context: moc)
-            ingredient.id = UUID()
-            ingredient.name = ingredientModel.name
-            ingredient.amount = ingredientModel.amount
-            ingredient.unit = ingredientModel.unit
-            newMealRecipe.addToIngredient(ingredient)
-        }
-        
-        do {
-            try moc.save()
-            print("wurden gespeichert")
-            print(recipeModel.title)
-        } catch {
-            print("Daten wurden nicht gespeichert")
-        }
-        
-    }
-    
-    private func deleteData(from recipe: MealRecipe) {
-        moc.delete(recipe)
-        
-        do {
-            try moc.save()
-        } catch let error as NSError {
-            // Fehlerbehandlung
-            print("Fehler beim Löschen: \(error), \(error.userInfo)")
-        }
-        
     }
 }
 

@@ -9,7 +9,6 @@ import Foundation
 
 class RecipeRapidData {
     
-    
     func fetchSearchedRecipes(with inputText: String, completion: @escaping ([Items]?) -> Void){
         
         let headers = [
