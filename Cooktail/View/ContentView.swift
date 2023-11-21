@@ -28,8 +28,7 @@ struct RecipeListView: View {
             VStack{
                 List(mealRecipes, id: \.id) { recipe in
                     NavigationLink(destination: RecipeDetailView(recipeData: recipe)) {
-                        RecipeListCell(title: recipe.wrappedTitle, portions: Int(recipe.portions), readyInMinutes: Int(recipe.cookingDuration), image: recipe.imageURL)
-                    }
+                        RecipeCellView(title: recipe.wrappedTitle, image: recipe.imageURL)                    }
                     .swipeActions {
                         Button {
                             self.recipeToDelete = recipe
@@ -50,7 +49,9 @@ struct RecipeListView: View {
                 }
                 Button("Ja") {
                     if let _recipeToDelete = recipeToDelete {
-                        dataController.delete(_recipeToDelete)
+                        DispatchQueue.main.async {
+                            dataController.delete(_recipeToDelete)
+                        }
                     }
                     self.deleteAlert = false
                 }

@@ -8,29 +8,23 @@
 import Foundation
 import SwiftUI
 
-struct RecipeListCell: View {
+struct RecipeCellView: View {
     
     var title: String
-    var portions: Int
-    var readyInMinutes: Int
     var image: String?
     
     var body: some View {
         HStack{
             if let _image = image {
-                AsyncImage(url: URL(string: _image), scale: 3.5)
+                AsyncImage(url: URL(string: _image), scale: 30)
                     .frame(width: 50, height: 50)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .padding(.horizontal)
             }
             VStack{
                 Text(title)
+                    .bold()
                     .multilineTextAlignment(.center)
-                    .font(.title3)
-                Text("Zubereitungszeit: \(String(readyInMinutes/60)) min.")
-                    .font(.footnote)
-                Text("Portionen: \(String(portions))")
-                    .font(.footnote)
             }
         }
     }

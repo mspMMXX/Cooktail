@@ -18,7 +18,7 @@ struct SearchedRecipeCellView: View {
         
         HStack{
             if let _image = image {
-                AsyncImage(url: URL(string: _image), scale: 3.5)
+                AsyncImage(url: URL(string: _image), scale: 30)
                     .frame(width: 50, height: 50)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .padding(.horizontal)

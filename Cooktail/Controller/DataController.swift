@@ -39,6 +39,7 @@ class DataController: ObservableObject {
             ingredient.name = ingredientModel.name
             ingredient.amount = ingredientModel.amount
             ingredient.unit = ingredientModel.unit
+//            ingredient.isChecked = false
             newMealRecipe.addToIngredient(ingredient)
         }
         

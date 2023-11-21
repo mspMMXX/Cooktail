@@ -12,8 +12,6 @@ struct ShoppingListView: View {
     
     @FetchRequest(sortDescriptors: []) var mealRecipes: FetchedResults<MealRecipe>
     
-    @State private var isOn: Bool = false
-    
     var body: some View {
         
         NavigationStack{
@@ -21,17 +19,13 @@ struct ShoppingListView: View {
                 ForEach(mealRecipes, id: \.self) { recipe in
                     Section(recipe.wrappedTitle) {
                         ForEach(recipe.ingredientArray, id: \.self) { ingredient in
-                            HStack{
-                                Text(ingredient.wrappedName)
-                                Spacer()
-                                Text("\(ingredient.wrappedAmount) \(ingredient.wrappedUnit)")
-                            }
+                            Text("\(ingredient.wrappedName)")
                         }
                     }
                 }
-                .navigationTitle("Shopping list")
-                .navigationBarTitleDisplayMode(.inline)
             }
+            .navigationTitle("Einkaufsliste")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
