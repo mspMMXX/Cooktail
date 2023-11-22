@@ -25,10 +25,11 @@ struct RecipeListView: View {
         
         NavigationStack {
             
-            VStack{
+            VStack {
                 List(mealRecipes, id: \.id) { recipe in
                     NavigationLink(destination: RecipeDetailView(recipeData: recipe)) {
-                        RecipeCellView(title: recipe.wrappedTitle, image: recipe.imageURL)                    }
+                        RecipeCellView(title: recipe.wrappedTitle, image: recipe.wrappedImageURL)
+                    }
                     .swipeActions {
                         Button {
                             self.recipeToDelete = recipe
@@ -65,25 +66,25 @@ struct RecipeListView: View {
                 })
             })
             .sheet(isPresented: $sheetIsPresented, content: {
-                SearchRecipesView(sheetIsPresented: $sheetIsPresented, recipeURL: $recipeURL)
+                SearchRecipesView(sheetIsPresented: $sheetIsPresented)
             })
         }
-        .onChange(of: recipeURL) {
-            print("RecipeListView OnChange = OK")
-            if let url = recipeURL {
-                recipeRapidData.fetchRecipe(with: url) { recipeModel in
-                    if let _recipeModel = recipeModel {
-                        recipe = _recipeModel
-                        if let _recipe = recipe {
-                            DispatchQueue.main.async {
-                                dataController.saveData(from: _recipe)
-                                print("AddToCoreData = OK")
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        .onChange(of: recipeURL) {
+//            print("RecipeListView OnChange = OK")
+//            if let url = recipeURL {
+//                recipeRapidData.fetchRecipe(with: url) { recipeModel in
+//                    if let _recipeModel = recipeModel {
+//                        recipe = _recipeModel
+//                        if let _recipe = recipe {
+//                            DispatchQueue.main.async {
+//                                dataController.saveData(from: _recipe)
+//                                print("AddToCoreData = OK")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

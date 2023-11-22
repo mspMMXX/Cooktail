@@ -14,8 +14,8 @@ struct RecipeDetailView: View {
     
     var body: some View {
         
-        VStack{
-                HStack{
+        VStack {
+                HStack {
                     AsyncImage(url: URL(string: recipeData.wrappedImageURL), scale: 17)
                         .frame(width: 80, height: 80)
                         .clipShape(RoundedRectangle(cornerRadius: 15))

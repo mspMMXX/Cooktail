@@ -20,7 +20,7 @@ extension Ingredient {
     @NSManaged public var name: String?
     @NSManaged public var amount: String?
     @NSManaged public var unit: String?
-//    @NSManaged public var isChecked: Bool
+    @NSManaged public var isChecked: Bool
     @NSManaged public var mealRecipe: MealRecipe?
     
     public var wrappedName: String {

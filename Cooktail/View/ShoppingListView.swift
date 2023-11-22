@@ -10,22 +10,24 @@ import SwiftUI
 
 struct ShoppingListView: View {
     
-    @FetchRequest(sortDescriptors: []) var mealRecipes: FetchedResults<MealRecipe>
+    @FetchRequest(sortDescriptors: [], animation: .default) var mealRecipes: FetchedResults<MealRecipe>
+    @Environment(\.managedObjectContext) var moc
     
     var body: some View {
         
-        NavigationStack{
+        NavigationStack {
             List {
                 ForEach(mealRecipes, id: \.self) { recipe in
                     Section(recipe.wrappedTitle) {
                         ForEach(recipe.ingredientArray, id: \.self) { ingredient in
-                            Text("\(ingredient.wrappedName)")
+                            ShoppingListCellView(ingredient: ingredient, moc: _moc)
                         }
                     }
                 }
             }
             .navigationTitle("Einkaufsliste")
             .navigationBarTitleDisplayMode(.inline)
+
         }
     }
 }

@@ -11,21 +11,16 @@ import SwiftUI
 struct SearchRecipesView: View {
     
     @Binding var sheetIsPresented: Bool
-    @Binding var recipeURL: String?
-    @State private var tappedRecipeURL: String?
-    @State private var alertIsPresented: Bool = false
     @State var searchText: String = ""
     @State private var searchedRecipeData: [Items] = []
     @State private var isLoading: Bool = false
     @State private var recipeIsFound = true
     
-    @Environment(\.colorScheme) var colorScheme
-    
     var body: some View {
         
-        NavigationStack{
+        NavigationStack {
             
-            HStack{
+            HStack {
                 
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.black)
@@ -42,7 +37,8 @@ struct SearchRecipesView: View {
                     
                 }, label: {
                     
-                    Image(systemName: "x.circle")
+                    Image(systemName: "x.circle.fill")
+                        .foregroundStyle(.gray)
                         .onTapGesture {
                             searchText = ""
                         }
@@ -57,36 +53,17 @@ struct SearchRecipesView: View {
             )
             .padding()
             
-            VStack{
+            VStack {
                 if isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     if recipeIsFound {
                         List(searchedRecipeData, id: \.id) { recipe in
-                            SearchedRecipeCellView(title: recipe.title, image: recipe.image_urls[0])
-                                .onTapGesture {
-                                    tappedRecipeURL = recipe.source
-                                    alertIsPresented = true
-                                }
-                                .alert("Möchten Sie das Rezept zu Ihrer Liste hinzufügen?", isPresented: $alertIsPresented) {
-                                    Button("Hinzufügen") {
-                                        
-                                        if let _tappedRecipeURL = tappedRecipeURL {
-                                            DispatchQueue.main.async {
-                                                recipeURL = _tappedRecipeURL
-                                                alertIsPresented = false
-                                                sheetIsPresented = false
-                                            }
-                                        }
-                                    }
-                                    Button("Abbrechen") {
-                                        
-                                        DispatchQueue.main.async {
-                                            alertIsPresented = false
-                                        }
-                                    }
-                                }
+                            
+                            NavigationLink(destination: SearchRecipeDetailView(recipeURL: recipe.source)) {
+                                SearchedRecipeCellView(title: recipe.title, image: recipe.image_urls[0])
+                            }
                         }
                         .listStyle(PlainListStyle())
                     } else {

@@ -3,6 +3,7 @@
     <entity name="Ingredient" representedClassName="Ingredient" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isChecked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="unit" optional="YES" attributeType="String"/>
         <relationship name="mealRecipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MealRecipe" inverseName="ingredient" inverseEntity="MealRecipe"/>
