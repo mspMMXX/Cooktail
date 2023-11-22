@@ -64,14 +64,49 @@ struct SearchRecipeDetailView: View {
             }
             
             HStack {
-                //                    Text("Portionen: \(portionsSelected)")
-                Stepper(value: $portionsSelected, in: 0...30) {
+                Stepper(value: $portionsSelected, in: 1...30) {
                     Text("Portionen: \(portionsSelected)")
                 }
             }
             
+            Section("Zutaten") {
+                ForEach(recipe.ingredients, id: \.self) { ingredient in
+                    HStack {
+                        Text("\(ingredient.name)")
+                        Spacer()
+                        if let amount = ingredient.amount {
+                            Text(newIngredientAmount(newPortion: Double(portionsSelected), oldPortion: Double(recipe.portions), amount: amount))
+                        }
+                        if let unit = ingredient.unit {
+                            Text(unit)
+                        }
+                    }
+                }
+            }
             
-            
+            Section("Anleitung") {
+                List(Array(recipe.steps.enumerated()), id: \.element) { index, step in
+                    HStack(alignment: .top) {
+                        Text("\(index + 1).")
+                            .bold()
+                            .frame(width: 30, alignment: .leading)
+                        
+                        Text(step)
+                        Spacer()
+                    }
+                }
+            }
         }
     }
+    
+    //Diese Funktion als Vorlage zur Zuweisung der neuen Amounts bei save verwenden wegen String
+    private func newIngredientAmount(newPortion: Double, oldPortion: Double, amount: String) -> String {
+        if let amountAsDouble = Double(amount) {
+            let newAmount = (amountAsDouble / oldPortion) * newPortion
+            return String(format: "%.2f", newAmount)
+        } else {
+            return ""
+        }
+    }
+    
 }
