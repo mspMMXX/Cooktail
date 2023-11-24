@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct ShoppingListCellView: View {
-
+    
     @ObservedObject var ingredient: Ingredient
     @Environment(\.managedObjectContext) var moc
     

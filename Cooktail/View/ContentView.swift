@@ -10,23 +10,20 @@ import CoreData
 
 struct RecipeListView: View {
     
-    @EnvironmentObject var dataController: DataController
-    @FetchRequest(sortDescriptors: []) var mealRecipes: FetchedResults<MealRecipe>
-    
-    private let recipeRapidData = RecipeRapidData()
+    @StateObject var dataController = DataController()
+    @State private var recipes: [MealRecipe] = []
     @State private var sheetIsPresented: Bool = false
-    @State private var recipesList: [RecipeModel] = []
-    @State private var recipeURL: String?
-    @State private var recipe: RecipeModel?
     @State private var deleteAlert: Bool = false
     @State private var recipeToDelete: MealRecipe?
+    
+    private var notificationController = NotificationController()
     
     var body: some View {
         
         NavigationStack {
             
             VStack {
-                List(mealRecipes, id: \.id) { recipe in
+                List(recipes, id: \.id) { recipe in
                     NavigationLink(destination: RecipeDetailView(recipeData: recipe)) {
                         RecipeCellView(title: recipe.wrappedTitle, image: recipe.wrappedImageURL)
                     }
@@ -52,6 +49,7 @@ struct RecipeListView: View {
                     if let _recipeToDelete = recipeToDelete {
                         DispatchQueue.main.async {
                             dataController.delete(_recipeToDelete)
+                            loadRecipes()
                         }
                     }
                     self.deleteAlert = false
@@ -69,22 +67,22 @@ struct RecipeListView: View {
                 SearchRecipesView(sheetIsPresented: $sheetIsPresented)
             })
         }
-//        .onChange(of: recipeURL) {
-//            print("RecipeListView OnChange = OK")
-//            if let url = recipeURL {
-//                recipeRapidData.fetchRecipe(with: url) { recipeModel in
-//                    if let _recipeModel = recipeModel {
-//                        recipe = _recipeModel
-//                        if let _recipe = recipe {
-//                            DispatchQueue.main.async {
-//                                dataController.saveData(from: _recipe)
-//                                print("AddToCoreData = OK")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        .onAppear {
+            loadRecipes()
+            notificationController.requestAuthorization()
+        }
+        .onChange(of: sheetIsPresented) {
+            loadRecipes()
+        }
+    }
+    
+    private func loadRecipes() {
+        let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
+        do {
+            recipes = try dataController.container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Fehler beim laden der Rezepte.")
+        }
     }
 }
 

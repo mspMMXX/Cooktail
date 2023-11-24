@@ -1,4 +1,4 @@
- //
+//
 //  Ingredient+CoreDataProperties.swift
 //  Cooktail
 //
@@ -11,11 +11,11 @@ import CoreData
 
 
 extension Ingredient {
-
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Ingredient> {
         return NSFetchRequest<Ingredient>(entityName: "Ingredient")
     }
-
+    
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
     @NSManaged public var amount: String?
@@ -37,5 +37,5 @@ extension Ingredient {
 }
 
 extension Ingredient : Identifiable {
-
+    
 }

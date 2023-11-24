@@ -11,9 +11,13 @@ import SwiftUI
 struct SearchRecipeDetailView: View {
     
     @State private var portionsSelected: Int = 1
-    @State private var recipeRapidData = RecipeRapidData()
+    var recipeRapidData = RecipeRapidData()
     @State private var recipeData: RecipeModel?
     @State var recipeURL: String
+    @State private var notificationDate = Date()
+    @StateObject var dataController = DataController()
+    @Binding var sheetIsPresented: Bool
+    var notificationController = NotificationController()
     
     var body: some View {
         
@@ -75,7 +79,7 @@ struct SearchRecipeDetailView: View {
                         Text("\(ingredient.name)")
                         Spacer()
                         if let amount = ingredient.amount {
-                            Text(newIngredientAmount(newPortion: Double(portionsSelected), oldPortion: Double(recipe.portions), amount: amount))
+                            Text("\(newIngredientAmount(newPortion: Double(portionsSelected), oldPortion: Double(recipe.portions), amount: amount))")
                         }
                         if let unit = ingredient.unit {
                             Text(unit)
@@ -96,10 +100,20 @@ struct SearchRecipeDetailView: View {
                     }
                 }
             }
+            //Muss noch als switch abgefragt werden ob man erinnert werden will
+            DatePicker("Kocherinnerung", selection: $notificationDate)
+            Button(action: {
+                if let _recipeData = recipeData {
+                    dataController.saveData(from: _recipeData, newPortion: portionsSelected)
+                    notificationController.scheduleNotification(at: notificationDate, recipeTitle: _recipeData.title)
+                    sheetIsPresented = false
+                }
+            }, label: {
+                Text("Speichern")
+            })
         }
     }
     
-    //Diese Funktion als Vorlage zur Zuweisung der neuen Amounts bei save verwenden wegen String
     private func newIngredientAmount(newPortion: Double, oldPortion: Double, amount: String) -> String {
         if let amountAsDouble = Double(amount) {
             let newAmount = (amountAsDouble / oldPortion) * newPortion

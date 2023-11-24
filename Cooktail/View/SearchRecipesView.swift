@@ -61,7 +61,7 @@ struct SearchRecipesView: View {
                     if recipeIsFound {
                         List(searchedRecipeData, id: \.id) { recipe in
                             
-                            NavigationLink(destination: SearchRecipeDetailView(recipeURL: recipe.source)) {
+                            NavigationLink(destination: SearchRecipeDetailView(recipeURL: recipe.source, sheetIsPresented: $sheetIsPresented)) {
                                 SearchedRecipeCellView(title: recipe.title, image: recipe.image_urls[0])
                             }
                         }
