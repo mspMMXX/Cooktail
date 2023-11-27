@@ -11,7 +11,7 @@ import CoreData
 
 struct ShoppingListView: View {
     
-    @ObservedObject var dataController: DataController
+    @StateObject var dataController: DataController
     @State private var recipes: [MealRecipe] = []
     
     var body: some View {

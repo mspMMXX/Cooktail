@@ -31,13 +31,6 @@ struct RecipeDetailView: View {
             }
             .padding(.bottom)
             Form {
-                Section("Koch-Alarm") {
-                    HStack {
-                        if let date = recipeData.notificationDate {
-                            Text(dateAsString(from: date))
-                        }
-                    }
-                }
                 Section("Zutaten") {
                     List {
                         ForEach(recipeData.ingredientArray, id: \.self) { ingredient in
