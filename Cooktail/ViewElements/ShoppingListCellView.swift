@@ -7,11 +7,12 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
 struct ShoppingListCellView: View {
     
-    @ObservedObject var ingredient: Ingredient
-    @Environment(\.managedObjectContext) var moc
+    @StateObject var ingredient: Ingredient
+    var moc: NSManagedObjectContext
     
     var body: some View {
         HStack {

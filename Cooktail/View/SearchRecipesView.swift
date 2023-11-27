@@ -37,13 +37,15 @@ struct SearchRecipesView: View {
                     
                 }, label: {
                     
-                    Image(systemName: "x.circle.fill")
-                        .foregroundStyle(.gray)
-                        .onTapGesture {
-                            searchText = ""
-                        }
-                        .foregroundStyle(.black)
-                        .padding(.trailing)
+                    if searchText != "" {
+                        Image(systemName: "x.circle.fill")
+                            .foregroundStyle(.gray)
+                            .onTapGesture {
+                                searchText = ""
+                            }
+                            .foregroundStyle(.black)
+                            .padding(.trailing)
+                    }
                 })
             }
             .padding(7)
@@ -80,8 +82,7 @@ struct SearchRecipesView: View {
                         }
                     }, label: {
                         
-                        Image(systemName: "x.circle.fill")
-                            .foregroundStyle(.gray)
+                        Text("Abbrechen")
                     })
                 })
         }

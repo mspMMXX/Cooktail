@@ -30,17 +30,34 @@ struct RecipeDetailView: View {
                 }
             }
             .padding(.bottom)
-            List(Array(recipeData.instructionsArray.enumerated()), id: \.element) { index, step in
-                HStack(alignment: .top) {
-                    Text("\(index + 1).")
-                        .bold()
-                        .frame(width: 30, alignment: .leading)
-                    
-                    Text(step)
-                    Spacer()
+            Form {
+                Section("Koch-Alarm") {
+                    HStack {
+                        if let date = recipeData.notificationDate {
+                            Text(dateAsString(from: date))
+                        }
+                    }
+                }
+                
+                Section("Anleitung") {
+                    List(Array(recipeData.instructionsArray.enumerated()), id: \.element) { index, step in
+                        HStack(alignment: .top) {
+                            Text("\(index + 1).")
+                                .bold()
+                                .frame(width: 30, alignment: .leading)
+                            
+                            Text(step)
+                            Spacer()
+                        }
+                    }
                 }
             }
         }
-        .navigationTitle("Anleitung")
+    }
+    
+    private func dateAsString(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy, HH:mm"
+        return dateFormatter.string(from: date)
     }
 }

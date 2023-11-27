@@ -12,6 +12,7 @@ class DataController: ObservableObject {
     
     /// Welches Datenmodell verwendet werden soll
     let container = NSPersistentContainer(name: "CooktailDataModel")
+    let notificationController = NotificationController()
     
     init() {
         container.loadPersistentStores { NSPersistentStoreDescription, error in
@@ -20,7 +21,7 @@ class DataController: ObservableObject {
             }
         }
     }
-    func saveData(from recipeModel: RecipeModel, newPortion: Int) {
+    func saveData(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date) {
         
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
@@ -31,6 +32,9 @@ class DataController: ObservableObject {
         newMealRecipe.instructionsArray = recipeModel.steps
         newMealRecipe.portions = Int16(newPortion)
         newMealRecipe.title = recipeModel.title
+        newMealRecipe.notificationDate = notificationDate
+        
+        notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title)
         
         for ingredientModel in recipeModel.ingredients {
             let ingredient = Ingredient(context: moc)

@@ -88,6 +88,8 @@ struct RecipeListView: View {
 
 struct ContentView: View {
     
+    @StateObject var dataController = DataController()
+    
     var body: some View {
         
         TabView {
@@ -95,7 +97,8 @@ struct ContentView: View {
                 .tabItem {
                     Label("Rezepte", systemImage: "list.bullet")
                 }
-            ShoppingListView()
+            ShoppingListView(dataController: dataController)
+            
                 .tabItem {
                     Label("Einkaufen", systemImage: "cart")
                 }

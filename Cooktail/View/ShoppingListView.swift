@@ -11,8 +11,7 @@ import CoreData
 
 struct ShoppingListView: View {
     
-    @Environment(\.managedObjectContext) var moc
-    @StateObject var dataController = DataController()
+    @ObservedObject var dataController: DataController
     @State private var recipes: [MealRecipe] = []
     
     var body: some View {
@@ -22,7 +21,7 @@ struct ShoppingListView: View {
                 ForEach(recipes, id: \.self) { recipe in
                     Section(recipe.wrappedTitle) {
                         ForEach(recipe.ingredientArray, id: \.self) { ingredient in
-                            ShoppingListCellView(ingredient: ingredient, moc: _moc)
+                            ShoppingListCellView(ingredient: ingredient, moc: dataController.container.viewContext)
                         }
                     }
                 }

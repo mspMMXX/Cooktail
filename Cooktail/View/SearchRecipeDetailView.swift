@@ -11,13 +11,15 @@ import SwiftUI
 struct SearchRecipeDetailView: View {
     
     @State private var portionsSelected: Int = 1
-    var recipeRapidData = RecipeRapidData()
     @State private var recipeData: RecipeModel?
     @State var recipeURL: String
-    @State private var notificationDate = Date()
-    @StateObject var dataController = DataController()
+    @State private var notificationDate: Date = Date()
+    @State private var reminderIsEnabled: Bool = false
+    @StateObject var dataController: DataController = DataController()
     @Binding var sheetIsPresented: Bool
+    
     var notificationController = NotificationController()
+    var recipeRapidData = RecipeRapidData()
     
     var body: some View {
         
@@ -28,6 +30,15 @@ struct SearchRecipeDetailView: View {
                 ProgressView()
             }
         }
+        .toolbar(content: {
+            Button("Speichern") {
+                if let _recipeData = recipeData {
+                    dataController.saveData(from: _recipeData, newPortion: portionsSelected, notificationDate: notificationDate)
+                    sheetIsPresented = false
+                }
+            }
+        })
+        
         .onAppear {
             DispatchQueue.main.async {
                 fetchRecipe(with: recipeURL)
@@ -100,17 +111,22 @@ struct SearchRecipeDetailView: View {
                     }
                 }
             }
-            //Muss noch als switch abgefragt werden ob man erinnert werden will
-            DatePicker("Kocherinnerung", selection: $notificationDate)
-            Button(action: {
-                if let _recipeData = recipeData {
-                    dataController.saveData(from: _recipeData, newPortion: portionsSelected)
-                    notificationController.scheduleNotification(at: notificationDate, recipeTitle: _recipeData.title)
-                    sheetIsPresented = false
+            Section("Erinnerung") {
+                VStack {
+                    HStack {
+                        Toggle(isOn: $reminderIsEnabled) {
+                            Text("Koch-Alarm")
+                        }
+                        Spacer()
+                    }
+                    HStack {
+                        if reminderIsEnabled {
+                            DatePicker("", selection: $notificationDate)
+                        }
+                        Spacer()
+                    }
                 }
-            }, label: {
-                Text("Speichern")
-            })
+            }
         }
     }
     
