@@ -31,7 +31,7 @@ struct ShoppingListCellView: View {
             })
             Text(ingredient.wrappedName)
             Spacer()
-            Text(ingredient.wrappedAmount)
+            Text(ingredient.wrappedAmount.replacing(".", with: ","))
             Text(ingredient.wrappedUnit)
         }
     }

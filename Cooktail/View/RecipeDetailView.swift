@@ -38,6 +38,18 @@ struct RecipeDetailView: View {
                         }
                     }
                 }
+                Section("Zutaten") {
+                    List {
+                        ForEach(recipeData.ingredientArray, id: \.self) { ingredient in
+                            HStack {
+                                Text(ingredient.wrappedName)
+                                Spacer()
+                                Text(ingredient.wrappedAmount.replacing(".", with: ","))
+                                Text(ingredient.wrappedUnit)
+                            }
+                        }
+                    }
+                }
                 
                 Section("Anleitung") {
                     List(Array(recipeData.instructionsArray.enumerated()), id: \.element) { index, step in

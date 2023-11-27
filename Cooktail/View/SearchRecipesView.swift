@@ -31,6 +31,7 @@ struct SearchRecipesView: View {
                             fetchSearchedRecipe()
                         }
                     }
+                    .submitLabel(.search)
                     .foregroundStyle(.black)
                 
                 Button(action: {
