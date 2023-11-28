@@ -24,7 +24,12 @@ class DataController: ObservableObject {
         }
     }
     
-    func saveData(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date) {
+    //MARK: - saveRecipe
+     ///Speichert die Daten eines RecipeModel in MealRecipe (CoreData)
+     ///Für jedes Objekt wird eine id erstellt
+     ///Mit dem NotificationDate wird eine Notification erstellt
+     ///Die for-Schleife speichert die Ingredientsdaten in ein Ingredient-Array
+    func saveRecipe(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date) {
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
         
@@ -55,6 +60,8 @@ class DataController: ObservableObject {
         }
     }
     
+    //MARK: - loadRecipe
+    //Ladet und speichert über inout die Recipes in das übergebene MealRecipe-Array
     func loadRecipes(to recipes: inout [MealRecipe]) {
         let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
         
@@ -65,7 +72,8 @@ class DataController: ObservableObject {
         }
     }
     
-    func delete(_ recipe: MealRecipe) {
+    //MARK: - deleteRecipe
+    func deleteRecipe(_ recipe: MealRecipe) {
         let moc = container.viewContext
         
         do {
@@ -76,6 +84,8 @@ class DataController: ObservableObject {
         }
     }
     
+    //MARK: - calculateNewAmount
+    //Berechnet den neuen Amount über die neue Portionsmenge
     private func calculateNewAmount(with originalAmount: String?, originalPortions: Int, newPortions: Int) -> String {
         guard let amountString = originalAmount, let amount = Double(amountString) else { return originalAmount ?? "" }
         let newAmount = (amount / Double(originalPortions)) * Double(newPortions)

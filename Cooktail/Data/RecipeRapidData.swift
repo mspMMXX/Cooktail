@@ -9,8 +9,9 @@ import Foundation
 
 class RecipeRapidData {
     
+    //MARK: - fetchSearchedRecipes
+    //Ladet anhand des inputTexts alle übereinstimmenden Recipes und parsed sie
     func fetchSearchedRecipes(with inputText: String, completion: @escaping ([Items]?) -> Void){
-        
         let headers = [
             "X-RapidAPI-Key": "acc4f02ef9msh063f3f22f773d42p18f871jsn9edf4640fa59",
             "X-RapidAPI-Host": "gustar-io-deutsche-rezepte.p.rapidapi.com"]
@@ -32,8 +33,9 @@ class RecipeRapidData {
         task.resume()
     }
     
+    //MARK: - parseJSONForSearchedRecipes
+    //Parse-Funktion zur Umwandlung der gesuchten Recipes
     func parseJSONForSearchedRecipes(from data: Data, completion: @escaping ([Items]?) -> Void) {
-        
         let decoder = JSONDecoder()
         do {
             let decoderData = try decoder.decode([Items].self, from: data)
@@ -45,8 +47,9 @@ class RecipeRapidData {
         }
     }
     
+    //MARK: - fetchRecipe
+    //Ladet jeweils ein Recipe mittels der URL
     func fetchRecipe(with url: String, completion: @escaping (RecipeModel?) -> Void){
-        
         let headers = [
             "X-RapidAPI-Key": "acc4f02ef9msh063f3f22f773d42p18f871jsn9edf4640fa59",
             "X-RapidAPI-Host": "gustar-io-deutsche-rezepte.p.rapidapi.com"]
@@ -68,10 +71,10 @@ class RecipeRapidData {
         task.resume()
     }
     
+    //MARK: - parseJSONRecipe
+    //Parse-Funktion zur Umwandlung eines Recipes
     func parseJSONForRecipe(from data: Data, completion: @escaping (RecipeModel?) -> Void) {
-        
         let decoder = JSONDecoder()
-        
         do {
             let decoderData = try decoder.decode(RecipeModel.self, from: data)
             DispatchQueue.main.async {

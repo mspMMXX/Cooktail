@@ -37,7 +37,7 @@ struct SearchRecipeDetailView: View {
         .toolbar(content: {
             Button("Speichern") {
                 if let _recipeData = recipeData {
-                    dataController.saveData(from: _recipeData, newPortion: portionsSelected, notificationDate: notificationDate)
+                    dataController.saveRecipe(from: _recipeData, newPortion: portionsSelected, notificationDate: notificationDate)
                     searchRecipeViewIsPresented = false
                 }
             }

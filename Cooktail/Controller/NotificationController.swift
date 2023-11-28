@@ -10,8 +10,12 @@ import UserNotifications
 
 class NotificationController{
     
-    let center = UNUserNotificationCenter.current()
+    //MARK: - Properties
+    let center = UNUserNotificationCenter.current() //Notification-Center-Objekt
     
+    //MARK: - requestAuthorization
+     ///Abfrage zur Zustimmung Notifications zu senden
+     ///Userdefaults speichert bei erstmaliger Abfrage mit true, dass die Abfrage nicht mehr erscheint
     func requestAuthorization() {
         let hasRequestedNotification = UserDefaults.standard.bool(forKey: "hasRequestedNotification")
         
@@ -25,6 +29,8 @@ class NotificationController{
         }
     }
     
+    //MARK: - scheduleNotification
+    ///Erstellt eine Notification mit dem übergebenen Date und dem Titel des Recipe
     func scheduleNotification(at date: Date, recipeTitle: String) {
         let content = UNMutableNotificationContent()
         content.title = "Cookingtime!"

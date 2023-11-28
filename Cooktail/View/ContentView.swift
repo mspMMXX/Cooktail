@@ -52,7 +52,7 @@ struct RecipeListView: View {
                 Button("Ja") {
                     if let _recipeToDelete = recipeToDelete {
                         DispatchQueue.main.async {
-                            dataController.delete(_recipeToDelete)
+                            dataController.deleteRecipe(_recipeToDelete)
                             dataController.loadRecipes(to: &recipes)
                         }
                     }
