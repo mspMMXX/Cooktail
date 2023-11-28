@@ -10,10 +10,11 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     
-    var recipeData: MealRecipe
+    //MARK: - Properties
+    var recipeData: MealRecipe //Das übergebende Objekt zur Detail-Darstellung
     
+    //MARK: - Body
     var body: some View {
-        
         VStack {
             HStack {
                 AsyncImage(url: URL(string: recipeData.wrappedImageURL), scale: 17)
@@ -43,14 +44,12 @@ struct RecipeDetailView: View {
                         }
                     }
                 }
-                
                 Section("Anleitung") {
                     List(Array(recipeData.instructionsArray.enumerated()), id: \.element) { index, step in
                         HStack(alignment: .top) {
                             Text("\(index + 1).")
                                 .bold()
                                 .frame(width: 30, alignment: .leading)
-                            
                             Text(step)
                             Spacer()
                         }
@@ -60,6 +59,7 @@ struct RecipeDetailView: View {
         }
     }
     
+    //Zur Umwandlung eines Date-Objekts in einen String
     private func dateAsString(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy, HH:mm"

@@ -11,9 +11,11 @@ import CoreData
 
 struct ShoppingListCellView: View {
     
+    //MARK: - Properties
     @StateObject var ingredient: Ingredient
     var moc: NSManagedObjectContext
     
+    //MARK: - Body
     var body: some View {
         HStack {
             Button(action: {

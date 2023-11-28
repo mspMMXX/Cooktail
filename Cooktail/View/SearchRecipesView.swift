@@ -10,12 +10,16 @@ import SwiftUI
 
 struct SearchRecipesView: View {
     
-    @Binding var sheetIsPresented: Bool
-    @State var searchText: String = ""
-    @State private var searchedRecipeData: [Items] = []
-    @State private var isLoading: Bool = false
-    @State private var recipeIsFound = true
+    //MARK: - @State Properties
+    @State var searchText: String = "" //Recipe-Suchwort aus Textfeld
+    @State private var searchedRecipeData: [Items] = [] //Recipe-Übersicht Daten
+    @State private var isLoading: Bool = false //Steuerung der Darstellung des Progressview
+    @State private var recipeIsFound = true //Ob Daten gefunden wurden
     
+    //MARK: - @Binding Properties
+    @Binding var searchRecipeViewIsPresented: Bool
+    
+    //MARK: - Body
     var body: some View {
         
         NavigationStack {
@@ -64,7 +68,7 @@ struct SearchRecipesView: View {
                     if recipeIsFound {
                         List(searchedRecipeData, id: \.id) { recipe in
                             
-                            NavigationLink(destination: SearchRecipeDetailView(recipeURL: recipe.source, sheetIsPresented: $sheetIsPresented)) {
+                            NavigationLink(destination: SearchRecipeDetailView(recipeURL: recipe.source, searchRecipeViewIsPresented: $searchRecipeViewIsPresented)) {
                                 SearchedRecipeCellView(title: recipe.title, image: recipe.image_urls[0])
                             }
                         }
@@ -79,7 +83,7 @@ struct SearchRecipesView: View {
                     Button(action: {
                         
                         DispatchQueue.main.async {
-                            sheetIsPresented = false
+                            searchRecipeViewIsPresented = false
                         }
                     }, label: {
                         
@@ -89,8 +93,11 @@ struct SearchRecipesView: View {
         }
     }
     
+    //MARK: - fetchSearchedRecipe
+    //Setzt und stoppt das Laden der Suche - isLoading
+    //Mittels searchText werden passende Recipes gesucht
+    //Übergibt entweder ein Recipe-Objekt oder recipeIsFound == false
     private func fetchSearchedRecipe() {
-        
         isLoading = true
         let recipes = RecipeRapidData()
         recipes.fetchSearchedRecipes(with: searchText) { recipeData in

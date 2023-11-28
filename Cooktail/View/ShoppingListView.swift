@@ -11,11 +11,12 @@ import CoreData
 
 struct ShoppingListView: View {
     
-    @StateObject var dataController: DataController
+    //MARK: - @State / @StateObject Properties
     @State private var recipes: [MealRecipe] = []
+    @StateObject var dataController: DataController //Datenhandhabung
     
+    //MARK: - Body
     var body: some View {
-        
         NavigationStack {
             List {
                 ForEach(recipes, id: \.self) { recipe in
@@ -30,16 +31,9 @@ struct ShoppingListView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
-            loadRecipes()
-        }
-    }
-    
-    private func loadRecipes() {
-        let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
-        do {
-            recipes = try dataController.container.viewContext.fetch(fetchRequest)
-        } catch {
-            print("Fehler beim laden der Rezepte.")
+            DispatchQueue.main.async {
+                dataController.loadRecipes(to: &recipes)
+            }
         }
     }
 }

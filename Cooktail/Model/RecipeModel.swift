@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Das Modell für die Umwandlung eines konkreten Recipes der JSON-API-Daten und zur Verwendung als Objekte
 public struct RecipeModel: Codable, Identifiable, Hashable {
     
     public let id: UUID?

@@ -10,10 +10,12 @@ import CoreData
 
 class DataController: ObservableObject {
     
-    /// Welches Datenmodell verwendet werden soll
+    //MARK: - Properties
+    //Welches Datenmodell verwendet werden soll
     let container = NSPersistentContainer(name: "CooktailDataModel")
     let notificationController = NotificationController()
     
+    //MARK: - init
     init() {
         container.loadPersistentStores { NSPersistentStoreDescription, error in
             if let error = error as NSError? {
@@ -21,8 +23,8 @@ class DataController: ObservableObject {
             }
         }
     }
+    
     func saveData(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date) {
-        
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
         
@@ -51,15 +53,23 @@ class DataController: ObservableObject {
         } catch let error as NSError {
             print("Fehler beim speichern: \(error), \(error.userInfo)")
         }
+    }
+    
+    func loadRecipes(to recipes: inout [MealRecipe]) {
+        let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
         
+        do {
+            recipes = try container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Fehler beim laden der Rezepte.")
+        }
     }
     
     func delete(_ recipe: MealRecipe) {
-        
         let moc = container.viewContext
-        moc.delete(recipe)
         
         do {
+            moc.delete(recipe)
             try moc.save()
         } catch let error as NSError {
             print("Fehler beim Löschen: \(error), \(error.userInfo)")

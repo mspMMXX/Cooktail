@@ -10,18 +10,22 @@ import CoreData
 
 struct RecipeListView: View {
     
-    @StateObject var dataController = DataController()
+    //MARK: - @State Properties
     @State private var recipes: [MealRecipe] = []
-    @State private var sheetIsPresented: Bool = false
-    @State private var deleteAlert: Bool = false
-    @State private var recipeToDelete: MealRecipe?
+    @State private var searchRecipeViewIsPresented: Bool = false //Steuert die Anzeige des SearchRecipesView
+    @State private var deleteAlertIsPresented: Bool = false //Steuert die Anzeige des Delet-Alerts
+    @State private var recipeToDelete: MealRecipe? //Referenz auf das zu löschende Recipe-Objekt
     
-    private var notificationController = NotificationController()
+    //MARK: - @StateObject Properties
+    @StateObject var dataController = DataController() //Datenhandhabung
     
+    //MARK: - Private Properties
+    private var notificationController = NotificationController() //Notification-Handhabung
+    
+    
+    //MARK: - Body
     var body: some View {
-        
         NavigationStack {
-            
             VStack {
                 List(recipes, id: \.id) { recipe in
                     NavigationLink(destination: RecipeDetailView(recipeData: recipe)) {
@@ -30,7 +34,7 @@ struct RecipeListView: View {
                     .swipeActions {
                         Button {
                             self.recipeToDelete = recipe
-                            deleteAlert = true
+                            deleteAlertIsPresented = true
                         } label: {
                             Image(systemName: "trash.fill")
                         }
@@ -40,65 +44,63 @@ struct RecipeListView: View {
             }
             .navigationTitle("Cooktail")
             .navigationBarTitleDisplayMode(.inline)
-            .alert("Rezept löschen?", isPresented: $deleteAlert, actions: {
+            .alert("Rezept löschen?", isPresented: $deleteAlertIsPresented, actions: {
                 Button("Nein") {
                     self.recipeToDelete = nil
-                    self.deleteAlert = false
+                    self.deleteAlertIsPresented = false
                 }
                 Button("Ja") {
                     if let _recipeToDelete = recipeToDelete {
                         DispatchQueue.main.async {
                             dataController.delete(_recipeToDelete)
-                            loadRecipes()
+                            dataController.loadRecipes(to: &recipes)
                         }
                     }
-                    self.deleteAlert = false
+                    self.deleteAlertIsPresented = false
                 }
             })
             .toolbar(content: {
-                
                 Button(action: {
-                    sheetIsPresented = true
+                    searchRecipeViewIsPresented = true
                 }, label: {
                     Image(systemName: "plus")
                 })
             })
-            .sheet(isPresented: $sheetIsPresented, content: {
-                SearchRecipesView(sheetIsPresented: $sheetIsPresented)
+            .sheet(isPresented: $searchRecipeViewIsPresented, content: {
+                SearchRecipesView(searchRecipeViewIsPresented: $searchRecipeViewIsPresented)
             })
         }
         .onAppear {
-            loadRecipes()
-            notificationController.requestAuthorization()
+            DispatchQueue.main.async {
+                dataController.loadRecipes(to: &recipes)
+                notificationController.requestAuthorization()
+            }
         }
-        .onChange(of: sheetIsPresented) {
-            loadRecipes()
-        }
-    }
-    
-    private func loadRecipes() {
-        let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
-        do {
-            recipes = try dataController.container.viewContext.fetch(fetchRequest)
-        } catch {
-            print("Fehler beim laden der Rezepte.")
+        .onChange(of: searchRecipeViewIsPresented) {
+            DispatchQueue.main.async {
+                dataController.loadRecipes(to: &recipes)
+            }
         }
     }
 }
 
+//MARK: - ContentView
+
 struct ContentView: View {
+    
+    //MARK: - ContentView Properties
     
     @StateObject var dataController = DataController()
     
+    //MARK: - ContentView Body
+    
     var body: some View {
-        
         TabView {
             RecipeListView()
                 .tabItem {
                     Label("Rezepte", systemImage: "list.bullet")
                 }
             ShoppingListView(dataController: dataController)
-            
                 .tabItem {
                     Label("Einkaufen", systemImage: "cart")
                 }

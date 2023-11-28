@@ -10,9 +10,11 @@ import SwiftUI
 
 struct RecipeCellView: View {
     
+    //MARK: - Properties
     var title: String
     var image: String
     
+    //MARK: - Body
     var body: some View {
         HStack{
             AsyncImage(url: URL(string: image), scale: 30) { image in
@@ -25,8 +27,6 @@ struct RecipeCellView: View {
         .frame(width: 50, height: 50)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal)
-            
-            
             VStack{
                 Text(title)
                     .font(.body)

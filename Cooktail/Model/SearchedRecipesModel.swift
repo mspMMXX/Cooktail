@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Das Modell für die Umwandlung der gesuchten JSON-API-Daten und zur Verwendung als Objekte
 struct SearchedRecipesModel: Codable {
     
     let items: [Items]
