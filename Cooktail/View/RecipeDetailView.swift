@@ -14,6 +14,7 @@ struct RecipeDetailView: View {
     @State private var newNotificationDate: Date = Date() //Zuweisung des neuen NotificationDates
     @State private var newPortionAmount: Int = 1 //Zuweisung der neuen Portionsmenge
     @State private var didUpdate: Bool = false
+    @State private var reminderIsEnabled: Bool = false
     
     //MARK: - @Environment Properties
     @EnvironmentObject var dataController: DataController
@@ -65,7 +66,10 @@ struct RecipeDetailView: View {
                     }
                 }
                 Section("Einstellungen") {
-                    DatePicker("Koch-Alarm", selection: $newNotificationDate)
+                    Toggle("Koch-Alarm", isOn: $reminderIsEnabled)
+                    if reminderIsEnabled {
+                        DatePicker("", selection: $newNotificationDate)
+                    }
                     HStack {
                         Text("Portionen: \(newPortionAmount)")
                         Stepper("", value: $newPortionAmount)
@@ -73,10 +77,7 @@ struct RecipeDetailView: View {
                     HStack {
                         Spacer()
                         Button {
-                            if let id = recipe.id {
-                                dataController.updateRecipe(from: recipe, newPortion: newPortionAmount, newNotificationDate: newNotificationDate)
-                                notificationController.updateScheduledNotification(at: newNotificationDate, recipeTitle: recipe.wrappedTitle, recipeID: id)
-                            }
+                            dataController.updateRecipe(from: recipe, newPortion: newPortionAmount, newNotificationDate: newNotificationDate, reminderIsEnabled: reminderIsEnabled)
                             didUpdate = true
                         } label: {
                             Text(didUpdate ? "Alles up to date" : "Aktualisieren")
@@ -93,6 +94,7 @@ struct RecipeDetailView: View {
                         newNotificationDate = date
                     }
                     newPortionAmount = Int(recipe.portions)
+                    reminderIsEnabled = recipe.reminderIsEnabled
                 }
             }
         }

@@ -24,6 +24,7 @@ extension MealRecipe {
     @NSManaged public var instructions: NSObject?
     @NSManaged public var ingredient: NSSet?
     @NSManaged public var notificationDate: Date?
+    @NSManaged public var reminderIsEnabled: Bool
     
     public var ingredientArray: [Ingredient] {
         get {

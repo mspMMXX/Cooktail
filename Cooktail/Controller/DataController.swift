@@ -32,7 +32,7 @@ class DataController: ObservableObject {
     ///Für jedes Objekt wird eine id erstellt
     ///Mit dem NotificationDate wird eine Notification erstellt
     ///Die for-Schleife speichert die Ingredientsdaten in ein Ingredient-Array
-    func saveRecipe(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date) {
+    func saveRecipe(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date, reminderIsEnabled: Bool) {
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
         
@@ -42,10 +42,13 @@ class DataController: ObservableObject {
         newMealRecipe.instructionsArray = recipeModel.steps
         newMealRecipe.portions = Int16(newPortion)
         newMealRecipe.title = recipeModel.title
-        newMealRecipe.notificationDate = notificationDate
+        newMealRecipe.reminderIsEnabled = reminderIsEnabled
         
-        if let id = recipeModel.id {
-            notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, recipeID: id)
+        if reminderIsEnabled {
+            newMealRecipe.notificationDate = notificationDate
+            if let id = recipeModel.id {
+                notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, recipeID: id)
+            }
         }
         
         for ingredientModel in recipeModel.ingredients {
@@ -68,7 +71,7 @@ class DataController: ObservableObject {
     //MARK: - updateRecipe
     ///Es werden alle Daten des Recipe verändert
     ///Aber nur die Amounts der Ingredients, da unit und name gleich bleiben
-    func updateRecipe(from recipe: MealRecipe, newPortion: Int, newNotificationDate: Date) {
+    func updateRecipe(from recipe: MealRecipe, newPortion: Int, newNotificationDate: Date, reminderIsEnabled: Bool) {
         let moc = container.viewContext
         
         let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
@@ -77,13 +80,16 @@ class DataController: ObservableObject {
         do {
             let results = try moc.fetch(fetchRequest)
             if let recipeToUpdate = results.first {
-                
-                recipeToUpdate.cookingDuration = recipe.cookingDuration
-                recipeToUpdate.imageURL = recipe.wrappedImageURL
-                recipeToUpdate.instructionsArray = recipe.instructionsArray
-                
+
                 recipeToUpdate.title = recipe.wrappedTitle
-                recipeToUpdate.notificationDate = newNotificationDate
+                recipeToUpdate.reminderIsEnabled = reminderIsEnabled
+                
+                if reminderIsEnabled {
+                    recipeToUpdate.notificationDate = newNotificationDate
+                    if let id = recipe.id {
+                        notificationController.updateScheduledNotification(at: newNotificationDate, recipeTitle: recipe.wrappedTitle, recipeID: id)
+                    }
+                }
 
                 for newIngredient in recipeToUpdate.ingredientArray {
                     newIngredient.amount = calculateNewAmount(originalAmount: newIngredient.amount, originalPortions: Int(recipeToUpdate.portions), newPortions: newPortion)
