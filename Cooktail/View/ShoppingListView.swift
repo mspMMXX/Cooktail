@@ -12,14 +12,13 @@ import CoreData
 struct ShoppingListView: View {
     
     //MARK: - @State / @StateObject Properties
-    @State private var recipes: [MealRecipe] = []
-    @StateObject var dataController: DataController //Datenhandhabung
+    @EnvironmentObject var dataController: DataController //Datenhandhabung
     
     //MARK: - Body
     var body: some View {
         NavigationStack {
             List {
-                ForEach(recipes, id: \.self) { recipe in
+                ForEach(dataController.recipes, id: \.self) { recipe in
                     Section(recipe.wrappedTitle) {
                         ForEach(recipe.ingredientArray, id: \.self) { ingredient in
                             ShoppingListCellView(ingredient: ingredient, moc: dataController.container.viewContext)
@@ -32,7 +31,7 @@ struct ShoppingListView: View {
         }
         .onAppear {
             DispatchQueue.main.async {
-                dataController.loadRecipes(to: &recipes)
+                dataController.loadRecipes()
             }
         }
     }

@@ -10,6 +10,9 @@ import CoreData
 
 class DataController: ObservableObject {
     
+    //MARK: - @Environment Properties
+    @Published var recipes: [MealRecipe] = []
+    
     //MARK: - Properties
     //Welches Datenmodell verwendet werden soll
     let container = NSPersistentContainer(name: "CooktailDataModel")
@@ -62,11 +65,11 @@ class DataController: ObservableObject {
     
     //MARK: - loadRecipe
     //Ladet und speichert über inout die Recipes in das übergebene MealRecipe-Array
-    func loadRecipes(to recipes: inout [MealRecipe]) {
+    func loadRecipes() {
         let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
         
         do {
-            recipes = try container.viewContext.fetch(fetchRequest)
+            self.recipes = try container.viewContext.fetch(fetchRequest)
         } catch {
             print("Fehler beim laden der Rezepte.")
         }
