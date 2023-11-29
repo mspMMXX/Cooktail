@@ -44,6 +44,18 @@ struct RecipeDetailViewElement: View {
                     Text("Portionen: \(portionsSelected)")
                 }
             }
+            Section("Anleitung") {
+                List(Array(recipe.steps.enumerated()), id: \.element) { index, step in
+                    HStack(alignment: .top) {
+                        Text("\(index + 1).")
+                            .bold()
+                            .frame(width: 30, alignment: .leading)
+                        
+                        Text(step)
+                        Spacer()
+                    }
+                }
+            }
             Section("Zutaten") {
                 ForEach(recipe.ingredients, id: \.self) { ingredient in
                     HStack {
@@ -55,18 +67,6 @@ struct RecipeDetailViewElement: View {
                         if let unit = ingredient.unit {
                             Text(unit)
                         }
-                    }
-                }
-            }
-            Section("Anleitung") {
-                List(Array(recipe.steps.enumerated()), id: \.element) { index, step in
-                    HStack(alignment: .top) {
-                        Text("\(index + 1).")
-                            .bold()
-                            .frame(width: 30, alignment: .leading)
-                        
-                        Text(step)
-                        Spacer()
                     }
                 }
             }

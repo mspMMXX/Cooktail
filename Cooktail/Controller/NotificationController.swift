@@ -31,7 +31,7 @@ class NotificationController{
     
     //MARK: - scheduleNotification
     ///Erstellt eine Notification mit dem übergebenen Date und dem Titel des Recipe
-    func scheduleNotification(at date: Date, recipeTitle: String) {
+    func scheduleNotification(at date: Date, recipeTitle: String, recipeID: UUID) {
         let content = UNMutableNotificationContent()
         content.title = "Cookingtime!"
         content.body = recipeTitle
@@ -42,12 +42,19 @@ class NotificationController{
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: recipeID.uuidString, content: content, trigger: trigger)
         
         center.add(request) { error in
             if let error = error {
                 print("Fehler beim hinzufügen der Notification: \(error)")
             }
         }
+    }
+    
+    //MARK: - updateScheduledNotification
+    func updateScheduledNotification(at newDate: Date, recipeTitle: String, recipeID: UUID) {
+        
+        center.removePendingNotificationRequests(withIdentifiers: [recipeID.uuidString])
+        scheduleNotification(at: newDate, recipeTitle: recipeTitle, recipeID: recipeID)
     }
 }

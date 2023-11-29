@@ -28,10 +28,10 @@ class DataController: ObservableObject {
     }
     
     //MARK: - saveRecipe
-     ///Speichert die Daten eines RecipeModel in MealRecipe (CoreData)
-     ///Für jedes Objekt wird eine id erstellt
-     ///Mit dem NotificationDate wird eine Notification erstellt
-     ///Die for-Schleife speichert die Ingredientsdaten in ein Ingredient-Array
+    ///Speichert die Daten eines RecipeModel in MealRecipe (CoreData)
+    ///Für jedes Objekt wird eine id erstellt
+    ///Mit dem NotificationDate wird eine Notification erstellt
+    ///Die for-Schleife speichert die Ingredientsdaten in ein Ingredient-Array
     func saveRecipe(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date) {
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
@@ -44,13 +44,15 @@ class DataController: ObservableObject {
         newMealRecipe.title = recipeModel.title
         newMealRecipe.notificationDate = notificationDate
         
-        notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title)
+        if let id = recipeModel.id {
+            notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, recipeID: id)
+        }
         
         for ingredientModel in recipeModel.ingredients {
             let ingredient = Ingredient(context: moc)
             ingredient.id = UUID()
             ingredient.name = ingredientModel.name
-            ingredient.amount = calculateNewAmount(with: ingredientModel.amount, originalPortions: recipeModel.portions, newPortions: newPortion)
+            ingredient.amount = calculateNewAmount(originalAmount: ingredientModel.amount, originalPortions: recipeModel.portions, newPortions: newPortion)
             ingredient.unit = ingredientModel.unit
             ingredient.isChecked = false
             newMealRecipe.addToIngredient(ingredient)
@@ -60,6 +62,37 @@ class DataController: ObservableObject {
             try moc.save()
         } catch let error as NSError {
             print("Fehler beim speichern: \(error), \(error.userInfo)")
+        }
+    }
+    
+    //MARK: - updateRecipe
+    ///Es werden alle Daten des Recipe verändert
+    ///Aber nur die Amounts der Ingredients, da unit und name gleich bleiben
+    func updateRecipe(from recipe: MealRecipe, newPortion: Int, newNotificationDate: Date) {
+        let moc = container.viewContext
+        
+        let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", recipe.id! as CVarArg)
+        
+        do {
+            let results = try moc.fetch(fetchRequest)
+            if let recipeToUpdate = results.first {
+                
+                recipeToUpdate.cookingDuration = recipe.cookingDuration
+                recipeToUpdate.imageURL = recipe.wrappedImageURL
+                recipeToUpdate.instructionsArray = recipe.instructionsArray
+                
+                recipeToUpdate.title = recipe.wrappedTitle
+                recipeToUpdate.notificationDate = newNotificationDate
+
+                for newIngredient in recipeToUpdate.ingredientArray {
+                    newIngredient.amount = calculateNewAmount(originalAmount: newIngredient.amount, originalPortions: Int(recipeToUpdate.portions), newPortions: newPortion)
+                }
+                recipeToUpdate.portions = Int16(newPortion)
+                try moc.save()
+            }
+        } catch let error as NSError {
+            print("Fehler beim Aktualisieren: \(error), \(error.userInfo)")
         }
     }
     
@@ -89,9 +122,17 @@ class DataController: ObservableObject {
     
     //MARK: - calculateNewAmount
     //Berechnet den neuen Amount über die neue Portionsmenge
-    private func calculateNewAmount(with originalAmount: String?, originalPortions: Int, newPortions: Int) -> String {
-        guard let amountString = originalAmount, let amount = Double(amountString) else { return originalAmount ?? "" }
+    private func calculateNewAmount(originalAmount: String?, originalPortions: Int, newPortions: Int) -> String {
+        guard let originalAmount = originalAmount, let amount = Double(originalAmount) else {
+            return ""
+        }
+        
         let newAmount = (amount / Double(originalPortions)) * Double(newPortions)
+        print("Amount: \(amount)")
+        print("OriginalPortions: \(originalPortions)")
+        print("NewPortions: \(newPortions)")
+        print(String(format: "%.2f", newAmount))
         return String(format: "%.2f", newAmount)
     }
+
 }
