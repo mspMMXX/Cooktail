@@ -11,7 +11,7 @@ import SwiftUI
 struct SearchRecipeDetailView: View {
     
     //MARK: - @State Properties
-    @State private var recipeData: RecipeModel? //Recipe Objekt
+    @State private var searchedRecipe: RecipeModel? //Recipe Objekt aus API
     @State private var portionsSelected: Int = 1 //Definierung der Portionsmengen
     @State private var reminderIsEnabled: Bool = false //Ein- und Ausblenden des DatePickers
     @State private var notificationDate: Date = Date()
@@ -28,7 +28,7 @@ struct SearchRecipeDetailView: View {
     //MARK: - Body
     var body: some View {
         Group {
-            if let _recipeData = recipeData {
+            if let _recipeData = searchedRecipe {
                 RecipeDetailViewElement(portionsSelected: $portionsSelected, reminderIsEnabled: $reminderIsEnabled, notificationDate: $notificationDate, recipe: _recipeData)
             } else {
                 ProgressView()
@@ -36,7 +36,7 @@ struct SearchRecipeDetailView: View {
         }
         .toolbar(content: {
             Button("Speichern") {
-                if let _recipeData = recipeData {
+                if let _recipeData = searchedRecipe {
                     dataController.saveRecipe(from: _recipeData, newPortion: portionsSelected, notificationDate: notificationDate)
                     searchRecipeViewIsPresented = false
                 }
@@ -46,7 +46,7 @@ struct SearchRecipeDetailView: View {
             DispatchQueue.main.async {
                 recipeRapidData.fetchRecipe(with: recipeURL) { recipe in
                     if let _recipe = recipe {
-                        recipeData = _recipe
+                        searchedRecipe = _recipe
                     }
                 }
             }

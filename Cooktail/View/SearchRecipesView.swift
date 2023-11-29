@@ -12,7 +12,7 @@ struct SearchRecipesView: View {
     
     //MARK: - @State Properties
     @State var searchText: String = "" //Recipe-Suchwort aus Textfeld
-    @State private var searchedRecipeData: [Items] = [] //Recipe-Übersicht Daten
+    @State private var searchedRecipe: [Items] = [] //Recipe-Übersicht Daten aus API
     @State private var isLoading: Bool = false //Steuerung der Darstellung des Progressview
     @State private var recipeIsFound = true //Ob Daten gefunden wurden
     
@@ -66,7 +66,7 @@ struct SearchRecipesView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     if recipeIsFound {
-                        List(searchedRecipeData, id: \.id) { recipe in
+                        List(searchedRecipe, id: \.id) { recipe in
                             
                             NavigationLink(destination: SearchRecipeDetailView(recipeURL: recipe.source, searchRecipeViewIsPresented: $searchRecipeViewIsPresented)) {
                                 SearchedRecipeCellView(title: recipe.title, image: recipe.image_urls[0])
@@ -103,7 +103,7 @@ struct SearchRecipesView: View {
         recipes.fetchSearchedRecipes(with: searchText) { recipeData in
             DispatchQueue.main.async {
                 if let items = recipeData, !items.isEmpty {
-                    self.searchedRecipeData = items
+                    self.searchedRecipe = items
                     self.recipeIsFound = true
                 } else {
                     self.recipeIsFound = false

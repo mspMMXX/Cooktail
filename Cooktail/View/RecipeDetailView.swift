@@ -10,23 +10,27 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     
+    //MARK: - @State Properties
+    @State private var newNotificationDate: Date = Date() //Zuweisung des neuen NotificationDates
+    @State private var newPortionAmount: Int = 1 //Zuweisung der neuen Portionsmenge
+    
     //MARK: - Properties
-    var recipeData: MealRecipe //Das übergebende Objekt zur Detail-Darstellung
+    var recipe: MealRecipe //Das übergebende Objekt zur Detail-Darstellung
     
     //MARK: - Body
     var body: some View {
         VStack {
             HStack {
-                AsyncImage(url: URL(string: recipeData.wrappedImageURL), scale: 17)
+                AsyncImage(url: URL(string: recipe.wrappedImageURL), scale: 17)
                     .frame(width: 80, height: 80)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .padding(.trailing)
                 VStack(alignment: .leading) {
-                    Text(recipeData.wrappedTitle)
+                    Text(recipe.wrappedTitle)
                         .bold()
-                    Text("Arbeitsaufwand: \(recipeData.cookingDuration / 60) min.")
+                    Text("Arbeitsaufwand: \(recipe.cookingDuration / 60) min.")
                         .font(.caption)
-                    Text("Portionen: \(recipeData.portions)")
+                    Text("Portionen: \(recipe.portions)")
                         .font(.caption)
                 }
             }
@@ -34,7 +38,7 @@ struct RecipeDetailView: View {
             Form {
                 Section("Zutaten") {
                     List {
-                        ForEach(recipeData.ingredientArray, id: \.self) { ingredient in
+                        ForEach(recipe.ingredientArray, id: \.self) { ingredient in
                             HStack {
                                 Text(ingredient.wrappedName)
                                 Spacer()
@@ -45,7 +49,7 @@ struct RecipeDetailView: View {
                     }
                 }
                 Section("Anleitung") {
-                    List(Array(recipeData.instructionsArray.enumerated()), id: \.element) { index, step in
+                    List(Array(recipe.instructionsArray.enumerated()), id: \.element) { index, step in
                         HStack(alignment: .top) {
                             Text("\(index + 1).")
                                 .bold()
@@ -54,6 +58,26 @@ struct RecipeDetailView: View {
                             Spacer()
                         }
                     }
+                }
+                Section("Einstellungen") {
+                    DatePicker("Koch-Alarm", selection: $newNotificationDate)
+                    HStack {
+                        Text("Portionen: \(newPortionAmount)")
+                        Stepper("", value: $newPortionAmount)
+                    }
+                    Spacer()
+                    Button {
+                        
+                    } label: {
+                        Text("Aktualisieren")
+                    }
+                    Spacer()
+                }
+                .onAppear {
+                    if let date = recipe.notificationDate {
+                        newNotificationDate = date
+                    }
+                    newPortionAmount = Int(recipe.portions)
                 }
             }
         }
