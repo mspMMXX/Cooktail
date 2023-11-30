@@ -66,9 +66,11 @@ struct RecipeDetailView: View {
                     }
                 }
                 Section("Einstellungen") {
-                    Toggle("Koch-Alarm", isOn: $reminderIsEnabled)
-                    if reminderIsEnabled {
-                        DatePicker("", selection: $newNotificationDate)
+                    VStack {
+                        Toggle("Koch-Alarm", isOn: $reminderIsEnabled)
+                        if reminderIsEnabled {
+                            DatePicker("", selection: $newNotificationDate)
+                        }
                     }
                     HStack {
                         Text("Portionen: \(newPortionAmount)")
@@ -77,8 +79,15 @@ struct RecipeDetailView: View {
                     HStack {
                         Spacer()
                         Button {
-                            dataController.updateRecipe(from: recipe, newPortion: newPortionAmount, newNotificationDate: newNotificationDate, reminderIsEnabled: reminderIsEnabled)
-                            didUpdate = true
+                            if reminderIsEnabled {
+                                dataController.updateRecipe(from: recipe, newPortion: newPortionAmount, newNotificationDate: newNotificationDate, reminderIsEnabled: reminderIsEnabled)
+                                didUpdate = true
+                            } else {
+                                if let id = recipe.id {
+                                    notificationController.deleteNotification(with: id)
+                                }
+                                didUpdate = true
+                            }
                         } label: {
                             Text(didUpdate ? "Alles up to date" : "Aktualisieren")
                                 .disabled(didUpdate)

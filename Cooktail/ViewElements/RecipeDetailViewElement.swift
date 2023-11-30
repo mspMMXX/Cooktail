@@ -72,17 +72,9 @@ struct RecipeDetailViewElement: View {
             }
             Section("Erinnerung") {
                 VStack {
-                    HStack {
-                        Toggle(isOn: $reminderIsEnabled) {
-                            Text("Koch-Alarm")
-                        }
-                        Spacer()
-                    }
-                    HStack {
-                        if reminderIsEnabled {
-                            DatePicker("", selection: $notificationDate)
-                        }
-                        Spacer()
+                    Toggle("Koch-Alarm", isOn: $reminderIsEnabled)
+                    if reminderIsEnabled {
+                        DatePicker("", selection: $notificationDate)
                     }
                 }
             }

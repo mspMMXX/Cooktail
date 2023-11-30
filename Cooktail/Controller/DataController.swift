@@ -35,8 +35,9 @@ class DataController: ObservableObject {
     func saveRecipe(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date, reminderIsEnabled: Bool) {
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
+        let id = UUID()
         
-        newMealRecipe.id = UUID()
+        newMealRecipe.id = id
         newMealRecipe.cookingDuration = Int64(recipeModel.totalTime)
         newMealRecipe.imageURL = recipeModel.image_urls[0]
         newMealRecipe.instructionsArray = recipeModel.steps
@@ -46,9 +47,7 @@ class DataController: ObservableObject {
         
         if reminderIsEnabled {
             newMealRecipe.notificationDate = notificationDate
-            if let id = recipeModel.id {
-                notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, recipeID: id)
-            }
+            notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, id: id)
         }
         
         for ingredientModel in recipeModel.ingredients {
@@ -80,17 +79,17 @@ class DataController: ObservableObject {
         do {
             let results = try moc.fetch(fetchRequest)
             if let recipeToUpdate = results.first {
-
+                
                 recipeToUpdate.title = recipe.wrappedTitle
                 recipeToUpdate.reminderIsEnabled = reminderIsEnabled
                 
                 if reminderIsEnabled {
                     recipeToUpdate.notificationDate = newNotificationDate
                     if let id = recipe.id {
-                        notificationController.updateScheduledNotification(at: newNotificationDate, recipeTitle: recipe.wrappedTitle, recipeID: id)
+                        notificationController.updateScheduledNotification(at: newNotificationDate, recipeTitle: recipe.wrappedTitle, id: id)
                     }
                 }
-
+                
                 for newIngredient in recipeToUpdate.ingredientArray {
                     newIngredient.amount = calculateNewAmount(originalAmount: newIngredient.amount, originalPortions: Int(recipeToUpdate.portions), newPortions: newPortion)
                 }
@@ -132,13 +131,8 @@ class DataController: ObservableObject {
         guard let originalAmount = originalAmount, let amount = Double(originalAmount) else {
             return ""
         }
-        
         let newAmount = (amount / Double(originalPortions)) * Double(newPortions)
-        print("Amount: \(amount)")
-        print("OriginalPortions: \(originalPortions)")
-        print("NewPortions: \(newPortions)")
-        print(String(format: "%.2f", newAmount))
         return String(format: "%.2f", newAmount)
     }
-
+    
 }

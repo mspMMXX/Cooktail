@@ -24,7 +24,6 @@ struct SearchRecipeDetailView: View {
     //MARK: - Properties
     var recipeRapidData = RecipeRapidData() //API-Recipe Objekt
     
-    
     //MARK: - Body
     var body: some View {
         Group {
