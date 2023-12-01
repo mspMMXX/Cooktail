@@ -12,21 +12,26 @@ struct RecipeCellView: View {
     
     //MARK: - Properties
     var title: String
-    var image: String
+    var imageURL: String
+    var image: Data?
     
     //MARK: - Body
     var body: some View {
         HStack{
-            AsyncImage(url: URL(string: image), scale: 30) { image in
-                image.resizable()
+            if let imageData = image,
+               let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
                     .aspectRatio(contentMode: .fill)
+                    .frame(width: 80, height: 80)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .padding(.trailing)
+            } else if let _imageURL = URL(string: imageURL) {
+                AsyncImage(url: _imageURL, scale: 17)
+                    .frame(width: 80, height: 80)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .padding(.trailing)
             }
-        placeholder: {
-            ProgressView()
-        }
-        .frame(width: 50, height: 50)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .padding(.horizontal)
             VStack{
                 Text(title)
                     .font(.body)

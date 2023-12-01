@@ -27,10 +27,20 @@ struct RecipeDetailView: View {
     var body: some View {
         VStack {
             HStack {
-                AsyncImage(url: URL(string: recipe.wrappedImageURL), scale: 17)
-                    .frame(width: 80, height: 80)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .padding(.trailing)
+                if let imageData = recipe.image,
+                   let uiImage = UIImage(data: imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 80, height: 80)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .padding(.trailing)
+                } else if let _imageURL = URL(string: recipe.wrappedImageURL) {
+                    AsyncImage(url: _imageURL, scale: 17)
+                        .frame(width: 80, height: 80)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .padding(.trailing)
+                }
                 VStack(alignment: .leading) {
                     Text(recipe.wrappedTitle)
                         .bold()

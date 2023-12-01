@@ -28,7 +28,7 @@ struct RecipeListView: View {
             VStack {
                 List(dataController.recipes, id: \.id) { recipe in
                     NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
-                        RecipeCellView(title: recipe.wrappedTitle, image: recipe.wrappedImageURL)
+                        RecipeCellView(title: recipe.wrappedTitle, imageURL: recipe.wrappedImageURL, image: recipe.image)
                     }
                     .swipeActions {
                         Button {

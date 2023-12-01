@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class DataController: ObservableObject {
     
@@ -44,7 +45,7 @@ class DataController: ObservableObject {
         newMealRecipe.portions = Int16(newPortion)
         newMealRecipe.title = recipeModel.title
         newMealRecipe.reminderIsEnabled = reminderIsEnabled
-        
+
         if reminderIsEnabled {
             newMealRecipe.notificationDate = notificationDate
             notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, id: id)
@@ -60,6 +61,17 @@ class DataController: ObservableObject {
             newMealRecipe.addToIngredient(ingredient)
         }
         
+        if let url = URL(string: recipeModel.image_urls[0]) {
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let data = data, let image = UIImage(data: data)?.pngData() {
+                    DispatchQueue.main.async {
+                        newMealRecipe.image = image
+                    }
+                }
+            }.resume()
+        } else {
+            //newRecipeMeal = nil?
+        }
         do {
             try moc.save()
         } catch let error as NSError {
