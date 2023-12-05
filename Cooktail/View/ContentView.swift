@@ -15,7 +15,7 @@ struct RecipeListView: View {
     @State private var deleteAlertIsPresented: Bool = false //Steuert die Anzeige des Delet-Alerts
     @State private var recipeToDelete: MealRecipe? //Referenz auf das zu löschende Recipe-Objekt
     
-    //MARK: - @StateObject Properties
+    //MARK: - @Environment Properties
     @EnvironmentObject var dataController: DataController //Datenhandhabung
     
     //MARK: - Private Properties

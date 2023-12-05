@@ -11,7 +11,7 @@ import UIKit
 
 class DataController: ObservableObject {
     
-    //MARK: - @Environment Properties
+    //MARK: - Properties
     @Published var recipes: [MealRecipe] = []
     
     //MARK: - Properties
