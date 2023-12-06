@@ -10,13 +10,12 @@ import SwiftUI
 
 struct RecipeDetailViewElement: View {
     
-    //MARK: - @Binding Properties
+    //MARK: - Properties
+    var recipe: RecipeModel
+    
     @Binding var portionsSelected: Int
     @Binding var reminderIsEnabled: Bool
     @Binding var notificationDate: Date
-    
-    //MARK: - Properties
-    var recipe: RecipeModel
     
     //MARK: - Body
     var body: some View {
@@ -81,6 +80,8 @@ struct RecipeDetailViewElement: View {
         }
     }
     
+    //MARK: - func newIngredientAmount
+    //Berechnet die neue Zutatenmenge anhand der neuen Portionsmenge
     private func newIngredientAmount(newPortion: Double, oldPortion: Double, amount: String) -> String {
         if let amountAsDouble = Double(amount) {
             let newAmount = (amountAsDouble / oldPortion) * newPortion

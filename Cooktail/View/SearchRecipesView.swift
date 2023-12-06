@@ -10,22 +10,18 @@ import SwiftUI
 
 struct SearchRecipesView: View {
     
-    //MARK: - @State Properties
+    //MARK: - Properties
     @State var searchText: String = "" //Recipe-Suchwort aus Textfeld
     @State private var searchedRecipe: [Items] = [] //Recipe-Übersicht Daten aus API
     @State private var isLoading: Bool = false //Steuerung der Darstellung des Progressview
     @State private var recipeIsFound = true //Ob Daten gefunden wurden
     
-    //MARK: - @Binding Properties
     @Binding var searchRecipeViewIsPresented: Bool
     
     //MARK: - Body
     var body: some View {
-        
         NavigationStack {
-            
             HStack {
-                
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.black)
                 
@@ -37,7 +33,6 @@ struct SearchRecipesView: View {
                     }
                     .submitLabel(.search)
                     .foregroundStyle(.black)
-                
                 Button(action: {
                     
                 }, label: {
@@ -93,7 +88,7 @@ struct SearchRecipesView: View {
         }
     }
     
-    //MARK: - fetchSearchedRecipe
+    //MARK: - func fetchSearchedRecipe
     //Setzt und stoppt das Laden der Suche - isLoading
     //Mittels searchText werden passende Recipes gesucht
     //Übergibt entweder ein Recipe-Objekt oder recipeIsFound == false

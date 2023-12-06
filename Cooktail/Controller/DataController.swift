@@ -14,8 +14,7 @@ class DataController: ObservableObject {
     //MARK: - Properties
     @Published var recipes: [MealRecipe] = []
     
-    //MARK: - Properties
-    //Welches Datenmodell verwendet werden soll
+    //Zuweisung des Datenmodells
     let container = NSPersistentContainer(name: "CooktailDataModel")
     let notificationController = NotificationController()
     
@@ -28,7 +27,7 @@ class DataController: ObservableObject {
         }
     }
     
-    //MARK: - saveRecipe
+    //MARK: - func saveRecipe
     ///Speichert die Daten eines RecipeModel in MealRecipe (CoreData)
     ///Für jedes Objekt wird eine id erstellt
     ///Mit dem NotificationDate wird eine Notification erstellt
@@ -79,7 +78,7 @@ class DataController: ObservableObject {
         }
     }
     
-    //MARK: - updateRecipe
+    //MARK: - func updateRecipe
     ///Es werden alle Daten des Recipe verändert
     ///Aber nur die Amounts der Ingredients, da unit und name gleich bleiben
     func updateRecipe(from recipe: MealRecipe, newPortion: Int, newNotificationDate: Date, reminderIsEnabled: Bool) {
@@ -113,7 +112,7 @@ class DataController: ObservableObject {
         }
     }
     
-    //MARK: - loadRecipe
+    //MARK: - func loadRecipe
     //Ladet und speichert über inout die Recipes in das übergebene MealRecipe-Array
     func loadRecipes() {
         let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
@@ -125,7 +124,7 @@ class DataController: ObservableObject {
         }
     }
     
-    //MARK: - deleteRecipe
+    //MARK: - func deleteRecipe
     func deleteRecipe(_ recipe: MealRecipe) {
         let moc = container.viewContext
         
@@ -137,7 +136,7 @@ class DataController: ObservableObject {
         }
     }
     
-    //MARK: - calculateNewAmount
+    //MARK: - func calculateNewAmount
     //Berechnet den neuen Amount über die neue Portionsmenge
     private func calculateNewAmount(originalAmount: String?, originalPortions: Int, newPortions: Int) -> String {
         guard let originalAmount = originalAmount, let amount = Double(originalAmount) else {

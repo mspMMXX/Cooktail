@@ -9,7 +9,7 @@ import Foundation
 
 class RecipeRapidData {
     
-    //MARK: - fetchSearchedRecipes
+    //MARK: - func fetchSearchedRecipes
     //Ladet anhand des inputTexts alle übereinstimmenden Recipes und parsed sie
     func fetchSearchedRecipes(with inputText: String, completion: @escaping ([Items]?) -> Void){
         let headers = [
@@ -33,7 +33,7 @@ class RecipeRapidData {
         task.resume()
     }
     
-    //MARK: - parseJSONForSearchedRecipes
+    //MARK: - func parseJSONForSearchedRecipes
     //Parse-Funktion zur Umwandlung der gesuchten Recipes
     func parseJSONForSearchedRecipes(from data: Data, completion: @escaping ([Items]?) -> Void) {
         let decoder = JSONDecoder()
@@ -47,7 +47,7 @@ class RecipeRapidData {
         }
     }
     
-    //MARK: - fetchRecipe
+    //MARK: - func fetchRecipe
     //Ladet jeweils ein Recipe mittels der URL
     func fetchRecipe(with url: String, completion: @escaping (RecipeModel?) -> Void){
         let headers = [
@@ -71,7 +71,7 @@ class RecipeRapidData {
         task.resume()
     }
     
-    //MARK: - parseJSONRecipe
+    //MARK: - func parseJSONRecipe
     //Parse-Funktion zur Umwandlung eines Recipes
     func parseJSONForRecipe(from data: Data, completion: @escaping (RecipeModel?) -> Void) {
         let decoder = JSONDecoder()

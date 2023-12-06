@@ -11,7 +11,7 @@ import CoreData
 
 struct ShoppingListView: View {
     
-    //MARK: - @Environment Properties
+    //MARK: - Properties
     @EnvironmentObject var dataController: DataController //Datenhandhabung
     
     //MARK: - Body

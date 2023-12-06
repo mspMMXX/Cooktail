@@ -13,7 +13,7 @@ class NotificationController{
     //MARK: - Properties
     let center = UNUserNotificationCenter.current() //Notification-Center-Objekt
     
-    //MARK: - requestAuthorization
+    //MARK: - func requestAuthorization
      ///Abfrage zur Zustimmung Notifications zu senden
      ///Userdefaults speichert bei erstmaliger Abfrage mit true, dass die Abfrage nicht mehr erscheint
     func requestAuthorization() {
@@ -29,7 +29,7 @@ class NotificationController{
         }
     }
     
-    //MARK: - scheduleNotification
+    //MARK: - func scheduleNotification
     ///Erstellt eine Notification mit dem übergebenen Date und dem Titel des Recipe
     func scheduleNotification(at date: Date, recipeTitle: String, id: UUID) {
         let content = UNMutableNotificationContent()
@@ -51,7 +51,8 @@ class NotificationController{
         }
     }
     
-    //MARK: - updateScheduledNotification
+    //MARK: - func updateScheduledNotification
+    //Löscht und erstellt eine neue Notification anhand der id
     func updateScheduledNotification(at newDate: Date, recipeTitle: String, id: UUID) {
         
         center.removePendingNotificationRequests(withIdentifiers: [id.uuidString])
