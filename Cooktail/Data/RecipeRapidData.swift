@@ -16,21 +16,22 @@ class RecipeRapidData {
             "X-RapidAPI-Key": "acc4f02ef9msh063f3f22f773d42p18f871jsn9edf4640fa59",
             "X-RapidAPI-Host": "gustar-io-deutsche-rezepte.p.rapidapi.com"]
         
-        let request = NSMutableURLRequest(url: NSURL(string: "https://gustar-io-deutsche-rezepte.p.rapidapi.com/search_api?text=\(inputText)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-            if let _error = error {
-                print("ERROR, RecipeRapidData: \(_error)")
-                return
+        if let url = NSURL(string: "https://gustar-io-deutsche-rezepte.p.rapidapi.com/search_api?text=\(inputText)") {
+            var request = URLRequest(url: url as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0)
+            request.allHTTPHeaderFields = headers
+            
+            let session = URLSession.shared
+            let task = session.dataTask(with: request) { (data, response, error) in
+                if let _error = error {
+                    print("ERROR, RecipeRapidData: \(_error)")
+                    return
+                }
+                if let _data = data {
+                    self.parseJSONForSearchedRecipes(from: _data, completion: completion)
+                }
             }
-            if let _data = data {
-                self.parseJSONForSearchedRecipes(from: _data, completion: completion)
-            }
+            task.resume()
         }
-        task.resume()
     }
     
     //MARK: - func parseJSONForSearchedRecipes
@@ -54,21 +55,23 @@ class RecipeRapidData {
             "X-RapidAPI-Key": "acc4f02ef9msh063f3f22f773d42p18f871jsn9edf4640fa59",
             "X-RapidAPI-Host": "gustar-io-deutsche-rezepte.p.rapidapi.com"]
         
-        let request = NSMutableURLRequest(url: NSURL(string: "https://gustar-io-deutsche-rezepte.p.rapidapi.com/crawl?target_url=\(url)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-            if let _error = error {
-                print("ERROR, RecipeRapidData: \(_error)")
-                return
+        if let url = NSURL(string: "https://gustar-io-deutsche-rezepte.p.rapidapi.com/crawl?target_url=\(url)") {
+            var request = URLRequest(url: url as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0)
+            request.allHTTPHeaderFields = headers
+            
+            let session = URLSession.shared
+            let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+                if let _error = error {
+                    print("ERROR, RecipeRapidData: \(_error)")
+                    return
+                }
+                if let _data = data {
+                    self.parseJSONForRecipe(from: _data, completion: completion)
+                }
             }
-            if let _data = data {
-                self.parseJSONForRecipe(from: _data, completion: completion)
-            }
+            task.resume()
         }
-        task.resume()
+
     }
     
     //MARK: - func parseJSONRecipe

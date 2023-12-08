@@ -27,7 +27,7 @@ struct SearchRecipeDetailView: View {
     var body: some View {
         Group {
             if let _recipeData = searchedRecipe {
-                RecipeDetailViewElement(portionsSelected: $portionsSelected, reminderIsEnabled: $reminderIsEnabled, notificationDate: $notificationDate, recipe: _recipeData)
+                RecipeDetailViewElement(recipe: _recipeData, portionsSelected: $portionsSelected, reminderIsEnabled: $reminderIsEnabled, notificationDate: $notificationDate)
             } else {
                 ProgressView()
             }
