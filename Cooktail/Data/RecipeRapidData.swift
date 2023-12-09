@@ -40,9 +40,7 @@ class RecipeRapidData {
         let decoder = JSONDecoder()
         do {
             let decoderData = try decoder.decode([Items].self, from: data)
-            DispatchQueue.main.async {
-                completion(decoderData)
-            }
+            completion(decoderData)
         }catch {
             print(error)
         }
@@ -71,7 +69,6 @@ class RecipeRapidData {
             }
             task.resume()
         }
-
     }
     
     //MARK: - func parseJSONRecipe
@@ -80,9 +77,7 @@ class RecipeRapidData {
         let decoder = JSONDecoder()
         do {
             let decoderData = try decoder.decode(RecipeModel.self, from: data)
-            DispatchQueue.main.async {
-                completion(decoderData)
-            }
+            completion(decoderData)
         }catch {
             print(error)
         }
