@@ -10,7 +10,8 @@ import Foundation
 class RecipeRapidData {
     
     //MARK: - func fetchSearchedRecipes
-    //Ladet anhand des inputTexts alle übereinstimmenden Recipes und parsed sie
+    /// Ladet anhand des inputTexts alle übereinstimmenden Recipes und parsed sie
+    /// - Parameter inputText: Der Text zur Suche von Rezepten
     func fetchSearchedRecipes(with inputText: String, completion: @escaping ([Items]?) -> Void){
         let headers = [
             "X-RapidAPI-Key": "acc4f02ef9msh063f3f22f773d42p18f871jsn9edf4640fa59",
@@ -35,7 +36,8 @@ class RecipeRapidData {
     }
     
     //MARK: - func parseJSONForSearchedRecipes
-    //Parse-Funktion zur Umwandlung der gesuchten Recipes
+    /// Parse-Funktion zur Umwandlung der gesuchten Recipes
+    /// - Parameter data: Die erhaltenen Daten aus der Suche
     func parseJSONForSearchedRecipes(from data: Data, completion: @escaping ([Items]?) -> Void) {
         let decoder = JSONDecoder()
         do {
@@ -47,7 +49,8 @@ class RecipeRapidData {
     }
     
     //MARK: - func fetchRecipe
-    //Ladet jeweils ein Recipe mittels der URL
+    /// Ladet jeweils ein Recipe mittels der URL
+    /// - Parameter url: Die URL zur Suche eines konkreten Rezeptes
     func fetchRecipe(with url: String, completion: @escaping (RecipeModel?) -> Void){
         let headers = [
             "X-RapidAPI-Key": "acc4f02ef9msh063f3f22f773d42p18f871jsn9edf4640fa59",
@@ -72,7 +75,8 @@ class RecipeRapidData {
     }
     
     //MARK: - func parseJSONRecipe
-    //Parse-Funktion zur Umwandlung eines Recipes
+    /// Parse-Funktion zur Umwandlung eines Recipes
+    /// - Parameter data: Die erhaltenen Daten aus der Suche
     func parseJSONForRecipe(from data: Data, completion: @escaping (RecipeModel?) -> Void) {
         let decoder = JSONDecoder()
         do {

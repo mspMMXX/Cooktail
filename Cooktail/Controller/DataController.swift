@@ -14,7 +14,7 @@ class DataController: ObservableObject {
     //MARK: - Properties
     @Published var recipes: [MealRecipe] = []
     
-    //Zuweisung des Datenmodells
+    /// Zuweisung des Datenmodells
     let container = NSPersistentContainer(name: "CooktailDataModel")
     let notificationController = NotificationController()
     
@@ -28,11 +28,16 @@ class DataController: ObservableObject {
     }
     
     //MARK: - func saveRecipe
-    ///Speichert die Daten eines RecipeModel in MealRecipe (CoreData)
-    ///Für jedes Objekt wird eine id erstellt
-    ///Mit dem NotificationDate wird eine Notification erstellt
-    ///Die for-Schleife speichert die Ingredientsdaten in ein Ingredient-Array
+    /// Speichert die Daten eines RecipeModel in MealRecipe (CoreData)
+    /// Für jedes Objekt wird eine id erstellt
+    /// Mit dem NotificationDate wird eine Notification erstellt
+    /// Die for-Schleife speichert die Ingredientsdaten in ein Ingredient-Array
+    /// - Parameter recipeModel: Ein konkretes Rezept-Objekt
+    /// - Parameter newPortion: Die neue Portionsmenge zur Berechnung der neuen Mengen
+    /// - Parameter notificationDate: Das Datum zur Erstellung der Benachrichtigung
+    /// - Parameter reminderIsEnabled: Ob eine Benachrichtigung erstellt werden soll
     func saveRecipe(from recipeModel: RecipeModel, newPortion: Int, notificationDate: Date, reminderIsEnabled: Bool) {
+
         let moc = container.viewContext
         let newMealRecipe = MealRecipe(context: moc)
         let id = UUID()
@@ -44,7 +49,7 @@ class DataController: ObservableObject {
         newMealRecipe.portions = Int16(newPortion)
         newMealRecipe.title = recipeModel.title
         newMealRecipe.reminderIsEnabled = reminderIsEnabled
-
+        
         if reminderIsEnabled {
             newMealRecipe.notificationDate = notificationDate
             notificationController.scheduleNotification(at: notificationDate, recipeTitle: recipeModel.title, id: id)
@@ -63,13 +68,9 @@ class DataController: ObservableObject {
         if let url = URL(string: recipeModel.image_urls[0]) {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data, let image = UIImage(data: data)?.pngData() {
-                    DispatchQueue.main.async {
-                        newMealRecipe.image = image
-                    }
+                    newMealRecipe.image = image
                 }
             }.resume()
-        } else {
-            //newRecipeMeal = nil?
         }
         do {
             try moc.save()
@@ -79,8 +80,11 @@ class DataController: ObservableObject {
     }
     
     //MARK: - func updateRecipe
-    ///Es werden alle Daten des Recipe verändert
-    ///Aber nur die Amounts der Ingredients, da unit und name gleich bleiben
+    /// Ändern der Benachrichtigung und oder der Portionsmenge
+    /// - Parameter recipe: Das bereits gespeicherte Rezept
+    /// - Parameter newPortion: Die neue Portionsmenge zur Berechnung der neuen Mengen
+    /// - Parameter notificationDate: Das Datum zur Erstellung der Benachrichtigung
+    /// - Parameter reminderIsEnabled: Ob eine Benachrichtigung erstellt werden soll
     func updateRecipe(from recipe: MealRecipe, newPortion: Int, newNotificationDate: Date, reminderIsEnabled: Bool) {
         let moc = container.viewContext
         
@@ -105,6 +109,7 @@ class DataController: ObservableObject {
                     newIngredient.amount = calculateNewAmount(originalAmount: newIngredient.amount, originalPortions: Int(recipeToUpdate.portions), newPortions: newPortion)
                 }
                 recipeToUpdate.portions = Int16(newPortion)
+                
                 try moc.save()
             }
         } catch let error as NSError {
@@ -113,7 +118,7 @@ class DataController: ObservableObject {
     }
     
     //MARK: - func loadRecipe
-    //Ladet und speichert über inout die Recipes in das übergebene MealRecipe-Array
+    /// Ladet und speichert über inout die Recipes in das übergebene MealRecipe-Array
     func loadRecipes() {
         let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
         
@@ -125,6 +130,7 @@ class DataController: ObservableObject {
     }
     
     //MARK: - func deleteRecipe
+    ///- Parameter recipe: Das zu löschende Rezept
     func deleteRecipe(_ recipe: MealRecipe) {
         let moc = container.viewContext
         
@@ -137,7 +143,10 @@ class DataController: ObservableObject {
     }
     
     //MARK: - func calculateNewAmount
-    //Berechnet den neuen Amount über die neue Portionsmenge
+    /// Berechnet den neuen Amount/Menge über die neue Portionsmenge
+    /// - Parameter originalAmount: Der alte Zutaten-Mengenwert
+    /// - Parameter originalPortions: Der alte Portionswert
+    /// - Parameter newPortions: Der neue Portionswert
     private func calculateNewAmount(originalAmount: String?, originalPortions: Int, newPortions: Int) -> String {
         guard let originalAmount = originalAmount, let amount = Double(originalAmount) else {
             return ""

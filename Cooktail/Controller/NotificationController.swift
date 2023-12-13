@@ -14,8 +14,8 @@ class NotificationController{
     let center = UNUserNotificationCenter.current() //Notification-Center-Objekt
     
     //MARK: - func requestAuthorization
-     ///Abfrage zur Zustimmung Notifications zu senden
-     ///Userdefaults speichert bei erstmaliger Abfrage mit true, dass die Abfrage nicht mehr erscheint
+     /// Abfrage zur Zustimmung Notifications zu senden
+     /// Userdefaults speichert bei erstmaliger Abfrage mit true, dass die Abfrage nicht mehr erscheint
     func requestAuthorization() {
         let hasRequestedNotification = UserDefaults.standard.bool(forKey: "hasRequestedNotification")
         
@@ -30,7 +30,10 @@ class NotificationController{
     }
     
     //MARK: - func scheduleNotification
-    ///Erstellt eine Notification mit dem übergebenen Date und dem Titel des Recipe
+    /// Erstellt eine Notification mit dem übergebenen Date und dem Titel des Recipe
+    /// - Parameter date: Dass Datum und Uhrzeit der Benachrichtigung
+    /// - Parameter recipeTitle: Der Rezepttitel zur Darstellung bei der Benachrichtigung
+    /// - Parameter id: Zur eindeutigen identifizierung der Benachrichtigungen
     func scheduleNotification(at date: Date, recipeTitle: String, id: UUID) {
         let content = UNMutableNotificationContent()
         content.title = "Cookingtime!"
@@ -52,7 +55,10 @@ class NotificationController{
     }
     
     //MARK: - func updateScheduledNotification
-    //Löscht und erstellt eine neue Notification anhand der id
+    /// Löscht und erstellt eine neue Notification anhand der id
+    /// - Parameter newDate: Das neue Datum und Uhrzeit der Benachrichtigung
+    /// - Parameter recipeTitle: Der Rezepttitel, wobei gleichbleibend
+    /// - Parameter id: Zur eindeutigen identifizierung der Benachrichtigungen
     func updateScheduledNotification(at newDate: Date, recipeTitle: String, id: UUID) {
         
         center.removePendingNotificationRequests(withIdentifiers: [id.uuidString])
@@ -60,6 +66,8 @@ class NotificationController{
     }
     
     //MARK: - deleteNotification
+    /// Löschen einer Benachrichtigung
+    /// - Parameter id: Löscht die Benachrichtigung anhand ihrerer id
     func deleteNotification(with id: UUID) {
         center.removePendingNotificationRequests(withIdentifiers: [id.uuidString])
     }

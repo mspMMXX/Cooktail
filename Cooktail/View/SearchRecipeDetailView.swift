@@ -11,17 +11,17 @@ import SwiftUI
 struct SearchRecipeDetailView: View {
     
     //MARK: - Properties
-    var recipeRapidData = RecipeRapidData() //API-Recipe Objekt
+    var recipeRapidData = RecipeRapidData() /// API-Recipe Objekt
     
-    @State private var searchedRecipe: RecipeModel? //Recipe Objekt aus API
-    @State private var portionsSelected: Int = 1 //Definierung der Portionsmengen
-    @State private var reminderIsEnabled: Bool = false //Ein- und Ausblenden des DatePickers
+    @State private var searchedRecipe: RecipeModel? /// Recipe Objekt aus API
+    @State private var portionsSelected: Int = 1 /// Definierung der Portionsmengen
+    @State private var reminderIsEnabled: Bool = false /// Ein- und Ausblenden des DatePickers
     @State private var notificationDate: Date = Date()
     @State var recipeURL: String
     
-    @Binding var searchRecipeViewIsPresented: Bool //Steuert die Anzeige des SearchRecipesView
+    @Binding var searchRecipeViewIsPresented: Bool /// Steuert die Anzeige des SearchRecipesView
     
-    @StateObject var dataController = DataController() //Datenhandhabung
+    @StateObject var dataController = DataController() /// Datenhandhabung
     
     //MARK: - Body
     var body: some View {

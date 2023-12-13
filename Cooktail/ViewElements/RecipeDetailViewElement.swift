@@ -81,7 +81,10 @@ struct RecipeDetailViewElement: View {
     }
     
     //MARK: - func newIngredientAmount
-    //Berechnet die neue Zutatenmenge anhand der neuen Portionsmenge
+    /// Berechnet die neue Zutatenmenge anhand der neuen Portionsmenge
+    /// - Parameter newPortion: Neue Portionsmenge
+    /// - Parameter oldPortion: Alte Portionsmenge
+    /// - Parameter amount: Mengenwert
     private func newIngredientAmount(newPortion: Double, oldPortion: Double, amount: String) -> String {
         if let amountAsDouble = Double(amount) {
             let newAmount = (amountAsDouble / oldPortion) * newPortion

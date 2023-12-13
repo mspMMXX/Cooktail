@@ -11,10 +11,10 @@ import SwiftUI
 struct SearchRecipesView: View {
     
     //MARK: - Properties
-    @State var searchText: String = "" //Recipe-Suchwort aus Textfeld
-    @State private var searchedRecipe: [Items] = [] //Recipe-Übersicht Daten aus API
-    @State private var isLoading: Bool = false //Steuerung der Darstellung des Progressview
-    @State private var recipeIsFound = true //Ob Daten gefunden wurden
+    @State var searchText: String = "" /// Recipe-Suchwort aus Textfeld
+    @State private var searchedRecipe: [Items] = [] /// Recipe-Übersicht Daten aus API
+    @State private var isLoading: Bool = false /// Steuerung der Darstellung des Progressview
+    @State private var recipeIsFound = true /// Ob Daten gefunden wurden
     
     @Binding var searchRecipeViewIsPresented: Bool
     
@@ -89,9 +89,9 @@ struct SearchRecipesView: View {
     }
     
     //MARK: - func fetchSearchedRecipe
-    //Setzt und stoppt das Laden der Suche - isLoading
-    //Mittels searchText werden passende Recipes gesucht
-    //Übergibt entweder ein Recipe-Objekt oder recipeIsFound == false
+    /// Setzt und stoppt das Laden der Suche - isLoading
+    /// Mittels searchText werden passende Recipes gesucht
+    /// Übergibt entweder ein Recipe-Objekt oder recipeIsFound == false
     private func fetchSearchedRecipe() {
         isLoading = true
         let recipes = RecipeRapidData()

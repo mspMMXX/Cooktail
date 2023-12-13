@@ -11,11 +11,11 @@ import SwiftUI
 struct RecipeDetailView: View {
     
     //MARK: - Properties
-    var recipe: MealRecipe //Das übergebende Objekt zur Detail-Darstellung
+    var recipe: MealRecipe /// Das übergebende Objekt zur Detail-Darstellung
     var notificationController: NotificationController = NotificationController()
     
-    @State private var newNotificationDate: Date = Date() //Zuweisung des neuen NotificationDates
-    @State private var newPortionAmount: Int = 1 //Zuweisung der neuen Portionsmenge
+    @State private var newNotificationDate: Date = Date() /// Zuweisung des neuen NotificationDates
+    @State private var newPortionAmount: Int = 1 /// Zuweisung der neuen Portionsmenge
     @State private var didUpdate: Bool = false
     @State private var reminderIsEnabled: Bool = false
     
@@ -118,7 +118,7 @@ struct RecipeDetailView: View {
     }
     
     //MARK: - func dateAsString
-    //Zur Umwandlung eines Date-Objekts in einen String
+    /// Zur Umwandlung eines Date-Objekts in einen String
     private func dateAsString(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy, HH:mm"

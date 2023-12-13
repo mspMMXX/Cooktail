@@ -11,13 +11,13 @@ import CoreData
 struct RecipeListView: View {
     
     //MARK: - Properties
-    private var notificationController = NotificationController() //Notification-Handhabung
+    private var notificationController = NotificationController() /// Notification-Handhabung
     
-    @State private var searchRecipeViewIsPresented: Bool = false //Steuert die Anzeige des SearchRecipesView
-    @State private var deleteAlertIsPresented: Bool = false //Steuert die Anzeige des Delet-Alerts
-    @State private var recipeToDelete: MealRecipe? //Referenz auf das zu löschende Recipe-Objekt
+    @State private var searchRecipeViewIsPresented: Bool = false /// Steuert die Anzeige des SearchRecipesView
+    @State private var deleteAlertIsPresented: Bool = false /// Steuert die Anzeige des Delet-Alerts
+    @State private var recipeToDelete: MealRecipe? /// Referenz auf das zu löschende Recipe-Objekt
     
-    @EnvironmentObject var dataController: DataController //Datenhandhabung
+    @EnvironmentObject var dataController: DataController /// Datenhandhabung
     
     //MARK: - Body
     var body: some View {
