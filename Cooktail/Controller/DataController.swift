@@ -68,7 +68,9 @@ class DataController: ObservableObject {
         if let url = URL(string: recipeModel.image_urls[0]) {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data, let image = UIImage(data: data)?.pngData() {
-                    newMealRecipe.image = image
+                    DispatchQueue.main.async {
+                        newMealRecipe.image = image
+                    }
                 }
             }.resume()
         }
@@ -103,6 +105,10 @@ class DataController: ObservableObject {
                     if let id = recipe.id {
                         notificationController.updateScheduledNotification(at: newNotificationDate, recipeTitle: recipe.wrappedTitle, id: id)
                     }
+                } else {
+                    if let id = recipe.id {
+                        notificationController.deleteNotification(with: id)
+                    }
                 }
                 
                 for newIngredient in recipeToUpdate.ingredientArray {
@@ -136,6 +142,9 @@ class DataController: ObservableObject {
         
         do {
             moc.delete(recipe)
+            if let id = recipe.id {
+                notificationController.deleteNotification(with: id)
+            }
             try moc.save()
         } catch let error as NSError {
             print("Fehler beim Löschen: \(error), \(error.userInfo)")

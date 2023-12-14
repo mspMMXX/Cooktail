@@ -19,7 +19,8 @@ struct RecipeDetailView: View {
     @State private var didUpdate: Bool = false
     @State private var reminderIsEnabled: Bool = false
     
-    @EnvironmentObject var dataController: DataController
+    @EnvironmentObject var dataController: DataController /// Datenhandhabung
+    @Environment(\.presentationMode) var presentationMode /// Zur steuerung des Viewwechsels
     
     //MARK: - Body
     var body: some View {
@@ -87,15 +88,9 @@ struct RecipeDetailView: View {
                     HStack {
                         Spacer()
                         Button {
-                            if reminderIsEnabled {
-                                dataController.updateRecipe(from: recipe, newPortion: newPortionAmount, newNotificationDate: newNotificationDate, reminderIsEnabled: reminderIsEnabled)
-                                didUpdate = true
-                            } else {
-                                if let id = recipe.id {
-                                    notificationController.deleteNotification(with: id)
-                                }
-                                didUpdate = true
-                            }
+                            dataController.updateRecipe(from: recipe, newPortion: newPortionAmount, newNotificationDate: newNotificationDate, reminderIsEnabled: reminderIsEnabled)
+                            didUpdate = true
+                            presentationMode.wrappedValue.dismiss()
                         } label: {
                             Text(didUpdate ? "Alles up to date" : "Aktualisieren")
                                 .disabled(didUpdate)
