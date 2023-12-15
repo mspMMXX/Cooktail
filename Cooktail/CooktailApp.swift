@@ -11,13 +11,17 @@ import SwiftUI
 struct CooktailApp: App {
     
     @StateObject private var dataController = DataController()
+    @AppStorage("ShowTutorial") private var showTutorial = true
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, dataController.container.viewContext)
-                .environmentObject(dataController)
-                
+            if showTutorial {
+                TutorialView(showTutorial: $showTutorial)
+            } else {
+                ContentView()
+                    .environment(\.managedObjectContext, dataController.container.viewContext)
+                    .environmentObject(dataController)
+            }
         }
     }
 }
