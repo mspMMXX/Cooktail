@@ -68,9 +68,7 @@ class DataController: ObservableObject {
         if let url = URL(string: recipeModel.image_urls[0]) {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data, let image = UIImage(data: data)?.pngData() {
-                    DispatchQueue.main.async {
                         newMealRecipe.image = image
-                    }
                 }
             }.resume()
         }
@@ -124,7 +122,7 @@ class DataController: ObservableObject {
     }
     
     //MARK: - func loadRecipe
-    /// Ladet und speichert über inout die Recipes in das übergebene MealRecipe-Array
+    /// Ladet die Recipes in das übergebene MealRecipe-Array
     func loadRecipes() {
         let fetchRequest: NSFetchRequest<MealRecipe> = MealRecipe.fetchRequest()
         
@@ -163,5 +161,4 @@ class DataController: ObservableObject {
         let newAmount = (amount / Double(originalPortions)) * Double(newPortions)
         return String(format: "%.2f", newAmount)
     }
-    
 }
