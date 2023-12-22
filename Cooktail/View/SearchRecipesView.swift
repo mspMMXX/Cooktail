@@ -96,15 +96,13 @@ struct SearchRecipesView: View {
         isLoading = true
         let recipes = RecipeRapidData()
         recipes.fetchSearchedRecipes(with: searchText) { recipeData in
-            DispatchQueue.main.async {
-                if let items = recipeData, !items.isEmpty {
-                    self.searchedRecipe = items
-                    self.recipeIsFound = true
-                } else {
-                    self.recipeIsFound = false
-                }
-                self.isLoading = false
+            if let items = recipeData, !items.isEmpty {
+                self.searchedRecipe = items
+                self.recipeIsFound = true
+            } else {
+                self.recipeIsFound = false
             }
+            self.isLoading = false
         }
     }
 }
