@@ -18,24 +18,20 @@ struct TutorialView: View {
     
     //MARK: - Body
     var body: some View {
-        if showTutorial {
-            TabView(selection: $selection) {
-                ForEach(0..<tutorialImages.count, id: \.self) { index in
-                    Image(tutorialImages[index])
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.height * 0.7)
-                        .tag(index)
-                }
+        TabView(selection: $selection) {
+            ForEach(0..<tutorialImages.count, id: \.self) { index in
+                Image(tutorialImages[index])
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.height * 0.7)
+                    .tag(index)
             }
-            .tabViewStyle(PageTabViewStyle())
-            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-            Button("Überspringen") {
-                UserDefaults.standard.set(false, forKey: "ShowTutorial")
-                showTutorial = false
-            }
-        } else {
-            RecipeListView()
+        }
+        .tabViewStyle(PageTabViewStyle())
+        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+        Button("Überspringen") {
+            UserDefaults.standard.set(false, forKey: "ShowTutorial")
+            showTutorial = false
         }
     }
 }

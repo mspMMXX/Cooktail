@@ -23,7 +23,6 @@ struct ShoppingListCellView: View {
                     ingredient.isChecked.toggle()
                     do {
                         try moc.save()
-                        print("Änderungen in isChecked wurden gespeichert.")
                     } catch {
                         print("Änderungen in isChecked konnten nicht gespeichert werden.")
                     }
